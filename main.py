@@ -16,7 +16,7 @@ def main():
     WIDTH, HEIGHT = 810, 810
     SQUARE_SIZE = 90
     ROWS, COLS = 9, 9
-    LEVEL = 3
+    LEVEL = 2
 
     # Create the display
     WIN = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -27,7 +27,7 @@ def main():
     black_knights = board.black_knights
     white_king = board.white_king
 
-    font = pygame.font.Font(None, 32)
+    font = pygame.font.Font(None, 40)
 
     # Render the text. "True" means anti-aliased text. 
     # (1, 1, 1) is the color of the text (in this case, white).
@@ -42,8 +42,8 @@ def main():
 
     # Center the text
     textRect.center = (WIDTH // 2, 20)
-    win_textRect.center = (WIDTH // 2, HEIGHT // 4)
-    lose_textRect.center = (WIDTH // 2, HEIGHT // 4)
+    win_textRect.center = (WIDTH // 2, 20)
+    lose_textRect.center = (WIDTH // 2, 20)
 
     display_text = text
     display_textRect = textRect
@@ -106,7 +106,9 @@ def main():
         
         WIN.blit(pygame.image.load(white_king.image_path), (white_king.x*SQUARE_SIZE, white_king.y*SQUARE_SIZE))
         
+        pygame.draw.rect(WIN, (0, 0, 0), display_textRect)
         WIN.blit(display_text, display_textRect)
+
 
         pygame.display.update()
 
