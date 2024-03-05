@@ -32,7 +32,28 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
+            
+            if event.type == pygame.KEYDOWN:
+                new_x, new_y = white_king.get_position()
+                if event.key == pygame.K_w:
+                    if board.check_move(white_king, white_king.x, white_king.y - 1):
+                        new_x = white_king.x
+                        new_y = white_king.y - 1
+                elif event.key == pygame.K_a:
+                    if board.check_move(white_king, white_king.x - 1, white_king.y):
+                        new_x = white_king.x - 1
+                        new_y = white_king.y
+                elif event.key == pygame.K_s:
+                    if board.check_move(white_king, white_king.x, white_king.y + 1):
+                        new_x = white_king.x
+                        new_y = white_king.y + 1
+                elif event.key == pygame.K_d:
+                    if board.check_move(white_king, white_king.x + 1, white_king.y):
+                        new_x = white_king.x + 1
+                        new_y = white_king.y
+                
+                white_king.move(new_x, new_y)
+                
         WIN.fill((0, 0, 0))
 
         # Draw the board

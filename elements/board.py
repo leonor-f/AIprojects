@@ -11,6 +11,11 @@ class Board:
         self.board = self.get_board(level)
         self.white_king = self.get_white_king(level)
 
+    def check_move(self, piece, new_x, new_y):
+        if self.board[new_y][new_x] == 0:
+            return False
+        else:
+            return True
     # setters
     def set_white_knights(self, white_knights):
         self.white_knights = white_knights
