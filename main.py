@@ -1,4 +1,5 @@
 import pygame
+from time import sleep
 from elements.board import Board
 
 W = 1
@@ -73,6 +74,7 @@ def main():
                         new_x = white_king.x + 1
                         new_y = white_king.y
                 elif event.key == pygame.K_SPACE:
+                    run = False
                     if board.check_win():
                         display_text = win_text
                         display_textRect = win_textRect
@@ -107,6 +109,9 @@ def main():
         WIN.blit(display_text, display_textRect)
 
         pygame.display.update()
+
+        if not run:
+            sleep(2)
 
     pygame.quit()
 
