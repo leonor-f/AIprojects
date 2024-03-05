@@ -49,6 +49,60 @@ class Board:
         else:
             return True
 
+    def check_win(self):
+        while True:
+            temp_white_knights = self.white_knights.copy()
+            temp_black_knights = self.black_knights.copy()
+
+            for white_knight in temp_white_knights:
+                if not white_knight.flag:
+                    for black_knight in temp_black_knights:
+                        if not black_knight.flag:
+                            if white_knight.x + 1 == black_knight.x and white_knight.y - 2 == black_knight.y:
+                                white_knight.flag = True
+                                black_knight.flag = True
+                                break
+                            elif white_knight.x + 1 == black_knight.x and white_knight.y + 2 == black_knight.y:
+                                white_knight.flag = True
+                                black_knight.flag = True
+                                break
+                            elif white_knight.x - 1 == black_knight.x and white_knight.y - 2 == black_knight.y:
+                                white_knight.flag = True
+                                black_knight.flag = True
+                                break
+                            elif white_knight.x - 1 == black_knight.x and white_knight.y + 2 == black_knight.y:
+                                white_knight.flag = True
+                                black_knight.flag = True
+                                break
+                            elif white_knight.x + 2 == black_knight.x and white_knight.y - 1 == black_knight.y:
+                                white_knight.flag = True
+                                black_knight.flag = True
+                                break
+                            elif white_knight.x + 2 == black_knight.x and white_knight.y + 1 == black_knight.y:
+                                white_knight.flag = True
+                                black_knight.flag = True
+                                break
+                            elif white_knight.x - 2 == black_knight.x and white_knight.y - 1 == black_knight.y:
+                                white_knight.flag = True
+                                black_knight.flag = True
+                                break
+                            elif white_knight.x - 2 == black_knight.x and white_knight.y + 1 == black_knight.y:
+                                white_knight.flag = True
+                                black_knight.flag = True
+                                break
+            
+            for white_knight in temp_white_knights:
+                if not white_knight.flag:
+                    return False
+            
+            for black_knight in temp_black_knights:
+                if not black_knight.flag:
+                    return False
+            
+            return True
+
+        
+    
     # setters
         
     def set_white_knights(self, white_knights):
