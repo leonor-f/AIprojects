@@ -15,7 +15,7 @@ def main():
     WIDTH, HEIGHT = 810, 810
     SQUARE_SIZE = 90
     ROWS, COLS = 9, 9
-    LEVEL = 2
+    LEVEL = 3
 
     # Create the display
     WIN = pygame.display.set_mode((WIDTH, HEIGHT))

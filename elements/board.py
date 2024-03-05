@@ -159,7 +159,7 @@ class Board:
             return [
                 [0, 0, W, 0, 0, 0, 0, 0, 0],
                 [B, W, B, W, B, W, B, W, 0],
-                [W, 0, W, B, 0, 0, W, B, W],
+                [0, 0, W, B, 0, 0, W, B, W],
                 [B, W, B, W, B, W, B, 0, B],
                 [W, 0, W, B, W, B, W, 0, 0],
                 [B, 0, B, W, B, W, B, 0, 0],
@@ -176,7 +176,7 @@ class Board:
         elif level == 2:
             return King(4, 7, "img/white_king.png")
         elif level == 3:
-            return King(2, 2, "img/white_king.png")
+            return King(2, 5, "img/white_king.png")
         else:
             pass
     
@@ -189,7 +189,8 @@ class Board:
             for x, y in [(3, 6), (5, 6)]:
                 white_knights.append(Knight(x, y, "img/white_knight.png"))
         elif level == 3:
-            pass
+            for x, y in [(3, 5), (7, 1), (2, 2)]:
+                white_knights.append(Knight(x, y, "img/white_knight.png"))
         else:
             pass
         return white_knights
@@ -203,7 +204,8 @@ class Board:
             for x, y in [(2, 1), (6, 2)]:
                 black_knights.append(Knight(x, y, "img/black_knight.png"))
         elif level == 3:
-            pass
+            for x, y in [(2, 0), (0, 1), (8, 3)]:
+                black_knights.append(Knight(x, y, "img/black_knight.png"))
         else:
             pass
         return black_knights

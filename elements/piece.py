@@ -5,8 +5,9 @@ class Piece:
         self.image_path = image_path
     
     def move(self, new_x, new_y):
-        self.x = new_x
-        self.y = new_y
+        if new_x >= 0 and new_x < 8 and new_y >= 0 and new_y < 8:
+            self.x = new_x
+            self.y = new_y
     
     def get_position(self):
         return self.x, self.y
