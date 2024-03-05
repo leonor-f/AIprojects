@@ -1,10 +1,15 @@
-import pygame
-
 class Piece:
-    def __init__(self, color, pos, image):
-        self.color = color
-        self.row = pos[0]
-        self.col = pos[1]
-        self.selected = False
+    def __init__(self, x, y, image_path):
+        self.x = x
+        self.y = y
+        self.image_path = image_path
+    
+    def move(self, new_x, new_y):
+        self.x = new_x
+        self.y = new_y
 
-    # def move(self, row, col):
+    def get_position(self):
+        return self.x, self.y
+
+    def get_image_path(self):
+        return self.image_path
