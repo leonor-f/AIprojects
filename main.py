@@ -36,19 +36,19 @@ def main():
             if event.type == pygame.KEYDOWN:
                 new_x, new_y = white_king.get_position()
                 if event.key == pygame.K_w:
-                    if board.check_move(white_king, white_king.x, white_king.y - 1):
+                    if board.check_move(white_king.x, white_king.y - 1, 'up'):
                         new_x = white_king.x
                         new_y = white_king.y - 1
                 elif event.key == pygame.K_a:
-                    if board.check_move(white_king, white_king.x - 1, white_king.y):
+                    if board.check_move(white_king.x - 1, white_king.y, 'left'):
                         new_x = white_king.x - 1
                         new_y = white_king.y
                 elif event.key == pygame.K_s:
-                    if board.check_move(white_king, white_king.x, white_king.y + 1):
+                    if board.check_move(white_king.x, white_king.y + 1, 'down'):
                         new_x = white_king.x
                         new_y = white_king.y + 1
                 elif event.key == pygame.K_d:
-                    if board.check_move(white_king, white_king.x + 1, white_king.y):
+                    if board.check_move(white_king.x + 1, white_king.y, 'right'):
                         new_x = white_king.x + 1
                         new_y = white_king.y
                 

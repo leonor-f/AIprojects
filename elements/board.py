@@ -10,13 +10,47 @@ class Board:
         self.black_knights = self.get_black_knights(level)
         self.board = self.get_board(level)
         self.white_king = self.get_white_king(level)
-
-    def check_move(self, piece, new_x, new_y):
-        if self.board[new_y][new_x] == 0:
+    
+    def move_white_knight(self, new_x, new_y, direction):
+        for white_knight in self.white_knights:
+            if white_knight.x == new_x and white_knight.y == new_y:
+                if direction == 'up' and self.board[new_y - 1][new_x] != 0:
+                    white_knight.move(new_x, new_y - 1)
+                elif direction == 'left' and self.board[new_y][new_x - 1] != 0:
+                    white_knight.move(new_x - 1, new_y)
+                elif direction == 'down' and self.board[new_y + 1][new_x] != 0:
+                    white_knight.move(new_x, new_y + 1)
+                elif direction == 'right' and self.board[new_y][new_x + 1] != 0:
+                    white_knight.move(new_x + 1, new_y)
+                else:
+                    return False
+                return True
+    
+    def check_move_black_knights(self, new_x, new_y):
+        for black_knight in self.black_knights:
+            if black_knight.x == new_x and black_knight.y == new_y:
+                return True
+        return False
+    
+    def check_move_white_knights(self, new_x, new_y):
+        for white_knight in self.white_knights:
+            if white_knight.x == new_x and white_knight.y == new_y:
+                return True
+        return False
+    
+    def check_move(self, new_x, new_y, direction):
+        if self.board[new_y][new_x] == 0 or self.check_move_black_knights(new_x, new_y):
             return False
+        elif self.check_move_white_knights(new_x, new_y):
+            if self.move_white_knight(new_x, new_y, direction):
+                return True
+            else:
+                return False
         else:
             return True
+
     # setters
+        
     def set_white_knights(self, white_knights):
         self.white_knights = white_knights
     
@@ -29,9 +63,6 @@ class Board:
     # getters
 
     def get_board(self, level):
-        white_knights = []
-        black_knights = []
-
         if level == 1:
             board = [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0],
