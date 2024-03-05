@@ -15,13 +15,25 @@ class Board:
         for white_knight in self.white_knights:
             if white_knight.x == new_x and white_knight.y == new_y:
                 if direction == 'up' and self.board[new_y - 1][new_x] != 0:
-                    white_knight.move(new_x, new_y - 1)
+                    if not self.check_move_black_knights(new_x, new_y - 1) and not self.check_move_white_knights(new_x, new_y - 1):
+                        white_knight.move(new_x, new_y - 1)
+                    else:
+                        return False
                 elif direction == 'left' and self.board[new_y][new_x - 1] != 0:
-                    white_knight.move(new_x - 1, new_y)
+                    if not self.check_move_black_knights(new_x - 1, new_y) and not self.check_move_white_knights(new_x - 1, new_y):
+                        white_knight.move(new_x - 1, new_y)
+                    else:
+                        return False
                 elif direction == 'down' and self.board[new_y + 1][new_x] != 0:
-                    white_knight.move(new_x, new_y + 1)
+                    if not self.check_move_black_knights(new_x, new_y + 1) and not self.check_move_white_knights(new_x, new_y + 1):
+                        white_knight.move(new_x, new_y + 1)
+                    else:
+                        return False
                 elif direction == 'right' and self.board[new_y][new_x + 1] != 0:
-                    white_knight.move(new_x + 1, new_y)
+                    if not self.check_move_black_knights(new_x + 1, new_y) and not self.check_move_white_knights(new_x + 1, new_y):
+                        white_knight.move(new_x + 1, new_y)
+                    else:
+                        return False
                 else:
                     return False
                 return True
