@@ -7,6 +7,10 @@ B = 2
 def main():
     pygame.init()
 
+    # Set up the window title
+    pygame.display.set_caption("Chesskoban")
+    pygame.display.set_icon(pygame.image.load("img/white_king.png"))
+
     # Set up some constants
     WIDTH, HEIGHT = 810, 810
     SQUARE_SIZE = 90
