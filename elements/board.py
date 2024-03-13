@@ -1,6 +1,3 @@
-from elements.knight import Knight
-from elements.king import King
-
 W = 1 # white square
 B = 2 # black square
 WW = 3 # white square and white knight
