@@ -1,13 +1,13 @@
 import pygame
 
-W = 1 # white square
-B = 2 # black square
-WW = 3 # white square and white knight
-WB = 4 # white square and black knight
-BW = 5 # black square and white knight
-BB = 6 # black square and black knight
-WK = 7 # white square and king
-BK = 8 # black square and king
+W = 1
+B = 2
+WW = 3
+WB = 4
+BW = 5
+BB = 6
+WK = 7
+BK = 8
 
 class Game:
   def __init__(self, board):
@@ -27,9 +27,6 @@ class Game:
   
   def set_white_knights(self, white_knights):
     self.white_knights = white_knights
-  
-  def set_black_knights(self, black_knights):
-    self.black_knights = black_knights
 
   def get_positions(self):
     positions = [[], [], []] # white_knights, black_knights, king
@@ -45,85 +42,40 @@ class Game:
           pass
     return positions
   
+  def change_board(self, board, new_x, new_y, x, y):
+    if board[new_y][new_x] == WW:
+      board[new_y][new_x] = W
+      board[y][x] = BW
+    elif board[new_y][new_x] == BW:
+      board[new_y][new_x] = B
+      board[y][x] = WW
+    return board
+  
   def move_white_knight(self, new_x, new_y, direction):
     white_knights = self.white_knights
     board = self.board
-    for white_knight in white_knights:
-      x, y = white_knight
-      if x == new_x and y == new_y:
-        if direction == 'up' and self.board[new_y - 1][new_x] != 0:
-          if not self.check_move_black_knights(new_x, new_y - 1) and not self.check_move_white_knights(new_x, new_y - 1):
-            white_knight[0] = new_x
-            white_knight[1] = new_y - 1
-            if board[y][x] == WW:
-              board[y][x] = W
-              board[new_y-1][new_x] = BW
-            elif board[y][x] == BW:
-              board[y][x] = B
-              board[new_y-1][new_x] = WW
-            self.set_white_knights(white_knights)
-            self.set_board(board)
-          else:
-            return False
-        elif direction == 'left' and self.board[new_y][new_x - 1] != 0:
-          if not self.check_move_black_knights(new_x - 1, new_y) and not self.check_move_white_knights(new_x - 1, new_y):
-            white_knight[0] = new_x - 1
-            white_knight[1] = new_y
-            if board[y][x] == WW:
-              board[y][x] = W
-              board[new_y][new_x-1] = BW
-            elif board[y][x] == BW:
-              board[y][x] = B
-              board[new_y][new_x-1] = WW
-            self.set_white_knights(white_knights)
-            self.set_board(board)
-          else:
-            return False
-        elif direction == 'down' and self.board[new_y + 1][new_x] != 0:
-          if not self.check_move_black_knights(new_x, new_y + 1) and not self.check_move_white_knights(new_x, new_y + 1):
-            white_knight[0] = new_x
-            white_knight[1] = new_y + 1
-            if board[y][x] == WW:
-              board[y][x] = W
-              board[new_y+1][new_x] = BW
-            elif board[y][x] == BW:
-              board[y][x] = B
-              board[new_y+1][new_x] = WW
-            self.set_white_knights(white_knights)
-            self.set_board(board)
-          else:
-            return False
-        elif direction == 'right' and self.board[new_y][new_x + 1] != 0:
-          if not self.check_move_black_knights(new_x + 1, new_y) and not self.check_move_white_knights(new_x + 1, new_y):
-            white_knight[0] = new_x + 1
-            white_knight[1] = new_y
-            if board[y][x] == WW:
-              board[y][x] = W
-              board[new_y][new_x+1] = BW
-            elif board[y][x] == BW:
-              board[y][x] = B
-              board[new_y][new_x+1] = WW
-            self.set_white_knights(white_knights)
-            self.set_board(board)
-          else:
-            return False
-        else:
-          return False
-        return True
-  
-  def check_move_black_knights(self, new_x, new_y):
-    black_knights = self.black_knights
-    for black_knight in black_knights:
-      if black_knight[0] == new_x and black_knight[1] == new_y:
-        return True
-    return False
-  
-  def check_move_white_knights(self, new_x, new_y):
-    white_knights = self.white_knights
-    for white_knight in white_knights:
-      if white_knight[0] == new_x and white_knight[1] == new_y:
-        return True
-    return False
+    if [new_x, new_y] in white_knights:
+      if direction == 'up' and self.board[new_y - 1][new_x] not in [0, WB, BB, WW, BW]:
+        x, y = new_x, new_y - 1
+        white_knight_index = white_knights.index([new_x, new_y])
+        white_knights[white_knight_index] = [x, y]
+      elif direction == 'left' and self.board[new_y][new_x - 1] not in [0, WB, BB, WW, BW]:
+        x, y = new_x - 1, new_y
+        white_knight_index = white_knights.index([new_x, new_y])
+        white_knights[white_knight_index] = [x, y]
+      elif direction == 'down' and self.board[new_y + 1][new_x] not in [0, WB, BB, WW, BW]:
+        x, y = new_x, new_y + 1
+        white_knight_index = white_knights.index([new_x, new_y])
+        white_knights[white_knight_index] = [x, y]
+      elif direction == 'right' and self.board[new_y][new_x + 1] not in [0, WB, BB, WW, BW]:
+        x, y = new_x + 1, new_y
+        white_knight_index = white_knights.index([new_x, new_y])
+        white_knights[white_knight_index] = [x, y]
+      else:
+        return False
+      self.set_white_knights(white_knights)
+      self.set_board(self.change_board(board, new_x, new_y, x, y))
+      return True
   
   def check_move(self, direction):
     x, y = self.king
