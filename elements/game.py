@@ -113,6 +113,25 @@ class Game:
       self.set_board(board)
       return
 
+  def simulate(self, wk, bk):
+    if all(knight[2] for knight in bk):
+      return True
+
+    moves = [(1, -2), (1, 2), (-1, -2), (-1, 2), (2, -1), (2, 1), (-2, -1), (-2, 1)]
+    for white_knight in wk:
+      if not white_knight[2]:
+        for move in moves:
+          for black_knight in bk:
+            if not black_knight[2] and white_knight[0] + move[0] == black_knight[0] and white_knight[1] + move[1] == black_knight[1]:
+              wk_copy = [list(knight) for knight in wk]
+              bk_copy = [list(knight) for knight in bk]
+              wk_copy[wk.index(white_knight)][2] = True
+              bk_copy[bk.index(black_knight)][2] = True
+              if self.simulate(wk_copy, bk_copy):
+                return True
+
+    return False
+
   def check_win(self):
     while True:
       temp_white_knights = self.white_knights.copy()
@@ -124,52 +143,9 @@ class Game:
       for black_knight in temp_black_knights:
         black_knight.append(False)
 
-      for white_knight in temp_white_knights:
-        if not white_knight[2]:
-          for black_knight in temp_black_knights:
-            if not black_knight[2]:
-              if white_knight[0] + 1 == black_knight[0] and white_knight[1] - 2 == black_knight[1]:
-                white_knight[2] = True
-                black_knight[2] = True
-                break
-              elif white_knight[0] + 1 == black_knight[0] and white_knight[1] + 2 == black_knight[1]:
-                white_knight[2] = True
-                black_knight[2] = True
-                break
-              elif white_knight[0] - 1 == black_knight[0] and white_knight[1] - 2 == black_knight[1]:
-                white_knight[2] = True
-                black_knight[2] = True
-                break
-              elif white_knight[0] - 1 == black_knight[0] and white_knight[1] + 2 == black_knight[1]:
-                white_knight[2] = True
-                black_knight[2] = True
-                break
-              elif white_knight[0] + 2 == black_knight[0] and white_knight[1] - 1 == black_knight[1]:
-                white_knight[2] = True
-                black_knight[2] = True
-                break
-              elif white_knight[0] + 2 == black_knight[0] and white_knight[1] + 1 == black_knight[1]:
-                white_knight[2] = True
-                black_knight[2] = True
-                break
-              elif white_knight[0] - 2 == black_knight[0] and white_knight[1] - 1 == black_knight[1]:
-                white_knight[2] = True
-                black_knight[2] = True
-                break
-              elif white_knight[0] - 2 == black_knight[0] and white_knight[1] + 1 == black_knight[1]:
-                white_knight[2] = True
-                black_knight[2] = True
-                break
-      
-      for white_knight in temp_white_knights:
-        if not white_knight[2]:
-          return False
-      
-      for black_knight in temp_black_knights:
-        if not black_knight[2]:
-          return False
-    
-      return True
+      if self.simulate(temp_white_knights, temp_black_knights):
+        return True
+      return False
   
   def draw(self, WIN, SQUARE_SIZE, WK_IMAGE_PATH, BK_IMAGE_PATH, K_IMAGE_PATH):
     board = self.board
