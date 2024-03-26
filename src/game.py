@@ -1,6 +1,7 @@
 import pygame
 import copy
 from time import sleep
+from collections import deque
 
 W = 1
 B = 2
@@ -16,7 +17,7 @@ class Game:
     self.board = board
     self.rows = 9
     self.cols = 9
-    self.positions = self.get_positions(board)
+    self.positions = self.get_positions()
     self.king = self.positions[2][0]
     self.white_knights = self.positions[0]
     self.black_knights = self.positions[1]
@@ -30,7 +31,14 @@ class Game:
   def set_white_knights(self, white_knights):
     self.white_knights = white_knights
 
-  def get_positions(self, board):
+  def set_positions(self):
+    self.positions = self.get_positions()
+    self.king = self.positions[2][0]
+    self.white_knights = self.positions[0]
+    self.black_knights = self.positions[1]
+
+  def get_positions(self):
+    board = self.board
     positions = [[], [], []] # white_knights, black_knights, king
     for y in range(self.rows):
       for x in range(self.cols):
@@ -124,13 +132,13 @@ class Game:
     elif direction == 'right':
       new_x, new_y = (x - 1) % 9, y % 9
       knight_x, knight_y = (x + 1) % 9, y % 9
+    self.set_board(self.change_king_board(x, y, new_x, new_y))
+    self.set_king(new_x, new_y)
     if knight_moved:
       white_knight_index = white_knights.index([knight_x, knight_y])
       white_knights[white_knight_index] = [x, y]
       self.set_white_knights(white_knights)
       self.set_board(self.change_white_knight_board(knight_x, knight_y, x, y))
-    self.set_board(self.change_king_board(x, y, new_x, new_y))
-    self.set_king(new_x, new_y)
 
   def simulate(self, white_knights, black_knights):
     if all(knight[2] for knight in black_knights):
@@ -200,20 +208,37 @@ class Game:
     if depth >= max_depth:
       return []
     moves = [['right', 1, 0], ['left', -1, 0], ['down', 0, 1], ['up', 0, -1]]
-    temp_path = path
     for [direction, x, y] in moves:
       new_x, new_y = king[0] + x, king[1] + y
       value = self.move(direction)
       if value or value == 2:
-        temp_path.append((new_x, new_y, direction, value == 2))
+        path.append((new_x, new_y, direction, value == 2))
         if self.check_win():
-          return ["WIN", temp_path]
-        tail = self.dfs_king(max_depth, depth + 1, temp_path)
+          return ["WIN", path]
+        tail = self.dfs_king(max_depth, depth + 1, path)
         if len(tail) == 0:
-          if len(temp_path) != 0:
-            self.undo_move(temp_path.pop())
+          if len(path) != 0:
+            self.undo_move(path.pop())
         elif tail[0] == "WIN":
           return tail
         else:
-          temp_path = tail
+          path = tail
+    return []
+
+  def bfs_king(self):
+    directions = {'right': (1, 0), 'left': (-1, 0), 'down': (0, 1), 'up': (0, -1)}
+    queue = deque([(copy.deepcopy(self.board), move, []) for move in directions.keys()])
+    while queue:
+      board, direction, path = queue.popleft()
+      self.set_board(board)
+      self.set_positions()
+      dx, dy = directions[direction]
+      new_king = (self.king[0] + dx, self.king[1] + dy)
+      value = self.move(direction)
+      if value or value == 2:
+        tail = (new_king[0], new_king[1], direction, value == 2)
+        if self.check_win():
+          return ["WIN", path + [tail]]
+        queue.extend((copy.deepcopy(self.board), new_move, path + [tail]) for new_move in directions.keys())
+        self.undo_move(tail)
     return []

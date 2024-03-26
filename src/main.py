@@ -12,7 +12,7 @@ def main():
 
   WIDTH, HEIGHT = 810, 810
   SQUARE_SIZE = 90
-  LEVEL = 4
+  LEVEL = 0
 
   WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -43,7 +43,8 @@ def main():
     
     run = True
     dfs = True
-    max_depth = [1, 6, 23, 23, 8]
+    bfs = False
+    max_depth = [2, 6, 23, 23, 8]
 
     move_count = 0
     moves = []
@@ -54,6 +55,11 @@ def main():
         moves = GAME_IA.dfs_king(max_depth[LEVEL], 0, [])
         print(moves)
         dfs = False
+      
+      if bfs:
+        moves = GAME_IA.bfs_king()
+        print(moves)
+        bfs = False
       
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -85,6 +91,11 @@ def main():
           elif event.key == pygame.K_n and move_count < max_depth[LEVEL]:
             GAME_PLAYER.move(moves[1][move_count][2])
             move_count += 1
+            if move_count == max_depth[LEVEL]:
+              display_text = win_text
+              display_textRect = win_textRect
+              run = False
+              break
           
           if direction != '':
             GAME_PLAYER.move(direction)
