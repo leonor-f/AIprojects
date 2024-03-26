@@ -64,20 +64,6 @@ class Game:
       board[new_y][new_x] = WK
     return board
   
-  # move_white_knight
-  # def move_white_knight(self, new_x, new_y, direction):
-  #   white_knights = self.white_knights
-  #   if [new_x, new_y] in white_knights:
-  #     if direction == 'up' and self.board[new_y - 1][new_x] not in [0, WB, BB, WW, BW]:
-  #       return True
-  #     elif direction == 'left' and self.board[new_y][new_x - 1] not in [0, WB, BB, WW, BW]:
-  #       return True
-  #     elif direction == 'down' and self.board[new_y + 1][new_x] not in [0, WB, BB, WW, BW]:
-  #       return True
-  #     elif direction == 'right' and self.board[new_y][new_x + 1] not in [0, WB, BB, WW, BW]:
-  #       return True
-  #   return False
-  
   def move_white_knight(self, x, y, direction):
     white_knights = self.white_knights
     if [x, y] in white_knights:
@@ -125,35 +111,26 @@ class Game:
 
   def undo_move(self, move):
     x, y, direction, knight_moved = move
+    white_knights = self.white_knights
     if direction == 'up':
       new_x, new_y = x % 9, (y + 1) % 9
+      knight_x, knight_y = x % 9, (y - 1) % 9
     elif direction == 'left':
       new_x, new_y = (x + 1) % 9, y % 9
+      knight_x, knight_y = (x - 1) % 9, y % 9
     elif direction == 'down':
       new_x, new_y = x % 9, (y - 1) % 9
+      knight_x, knight_y = x % 9, (y + 1) % 9
     elif direction == 'right':
       new_x, new_y = (x - 1) % 9, y % 9
+      knight_x, knight_y = (x + 1) % 9, y % 9
     if knight_moved:
-      self.set_board(self.change_white_knight_board(x, y, new_x, new_y))
+      white_knight_index = white_knights.index([knight_x, knight_y])
+      white_knights[white_knight_index] = [x, y]
+      self.set_white_knights(white_knights)
+      self.set_board(self.change_white_knight_board(knight_x, knight_y, x, y))
     self.set_board(self.change_king_board(x, y, new_x, new_y))
     self.set_king(new_x, new_y)
-
-    # white_knights = self.white_knights
-    # if knight_moved:
-    #   if direction == 'up':
-    #     white_knight_index = white_knights.index([x, y - 1])
-    #   elif direction == 'left':
-    #     white_knight_index = white_knights.index([x + 1, y])
-    #   elif direction == 'down':
-    #     white_knight_index = white_knights.index([x, y + 1])
-    #   elif direction == 'right':
-    #     white_knight_index = white_knights.index([x - 1, y])
-    #   else:
-    #     return
-    #   white_knights[white_knight_index] = [new_x, new_y]
-    #   self.set_white_knights(white_knights)
-
-    
 
   def simulate(self, white_knights, black_knights):
     if all(knight[2] for knight in black_knights):
@@ -218,7 +195,7 @@ class Game:
           pygame.draw.rect(WIN, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
           WIN.blit(K_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
 
-  def dfs_king(self, max_depth, depth=0, path=[]):
+  def dfs_king(self, max_depth, depth, path):
     king = self.king
     if depth >= max_depth:
       return []
@@ -229,7 +206,6 @@ class Game:
       value = self.move(direction)
       if value or value == 2:
         temp_path.append((new_x, new_y, direction, value == 2))
-        print("temp_path", temp_path)
         if self.check_win():
           return ["WIN", temp_path]
         tail = self.dfs_king(max_depth, depth + 1, temp_path)
