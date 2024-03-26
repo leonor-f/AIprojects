@@ -1,13 +1,14 @@
 import pygame
+import random
 from time import sleep
-from elements.board import Board
-from elements.game import Game
+from board import Board
+from game import Game
 
 def main():
   pygame.init()
 
   pygame.display.set_caption("Chesskoban")
-  pygame.display.set_icon(pygame.image.load("img/white_king.png"))
+  pygame.display.set_icon(pygame.image.load("../img/white_king.png"))
 
   WIDTH, HEIGHT = 810, 810
   SQUARE_SIZE = 90
@@ -16,10 +17,11 @@ def main():
   WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 
   while LEVEL < 5:
-    GAME = Game(Board(LEVEL).board)
-    WK_IMAGE_PATH = pygame.image.load("img/white_knight.png")
-    BK_IMAGE_PATH = pygame.image.load("img/black_knight.png")
-    K_IMAGE_PATH = pygame.image.load("img/white_king.png")
+    GAME_IA = Game(Board(LEVEL).board)
+    GAME_PLAYER = Game(Board(LEVEL).board)
+    WK_IMAGE_PATH = pygame.image.load("../img/white_knight.png")
+    BK_IMAGE_PATH = pygame.image.load("../img/black_knight.png")
+    K_IMAGE_PATH = pygame.image.load("../img/white_king.png")
 
     font = pygame.font.Font(None, 40)
 
@@ -39,8 +41,20 @@ def main():
     display_textRect = textRect
 
     run = True
+    dfs = True
+    max_depth = [1, 6, 23, 23, 8]
+
+    move_count = 0
+    moves = []
 
     while run:
+      # GAME.move(random.choice(['up', 'down', 'left', 'right']))
+      if dfs:
+        moves = GAME_IA.dfs_king(max_depth[LEVEL])
+        print(moves)
+        print(GAME_IA.white_knights)
+        dfs = False
+      
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           run = False
@@ -56,7 +70,7 @@ def main():
             direction = 'right'
           elif event.key == pygame.K_SPACE:
             run = False
-            if GAME.check_win():
+            if GAME_IA.check_win():
               display_text = win_text
               display_textRect = win_textRect
             else:
@@ -68,14 +82,17 @@ def main():
             run = False
             LEVEL = 4
             break
+          elif event.key == pygame.K_p and move_count < max_depth[LEVEL]:
+            GAME_PLAYER.move(moves[1][move_count][2])
+            move_count += 1
           
           if direction != '':
-            GAME.check_move(direction)
+            GAME_PLAYER.move(direction)
                   
       WIN.fill((0, 0, 0))
 
-      GAME.draw(WIN, SQUARE_SIZE, WK_IMAGE_PATH, BK_IMAGE_PATH, K_IMAGE_PATH)
-
+      GAME_PLAYER.draw(WIN, SQUARE_SIZE, WK_IMAGE_PATH, BK_IMAGE_PATH, K_IMAGE_PATH)
+      
       pygame.draw.rect(WIN, (0, 0, 0), display_textRect)
       WIN.blit(display_text, display_textRect)
 
@@ -84,12 +101,12 @@ def main():
       if display_text in [win_text, lose_text]:
         sleep(0.5)
 
-    LEVEL += 1
+    # LEVEL += 1
+    dfs = True
 
   sleep(0.5)
 
   pygame.quit()
 
 if __name__ == "__main__":
-
   main()

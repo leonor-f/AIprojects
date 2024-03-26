@@ -12,7 +12,19 @@ class Board:
     self.board = self.get_board(level)
   
   def get_board(self, level):
-    if level == 1:
+    if level == 0:
+      return [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, W, B, W, B, W, 0, 0],
+        [0, 0, B, W, B, W, B, 0, 0],
+        [0, 0, W, B, W, B, W, 0, 0],
+        [0, 0, B, W, BW, W, BB, 0, 0],
+        [0, 0, W, B, WK, B, W, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      ]
+    elif level == 1:
       return [
         [0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, BB, 0, 0],
