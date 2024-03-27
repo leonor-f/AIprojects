@@ -24,6 +24,7 @@ class Game:
 
   def set_board(self, board):
     self.board = board
+    self.set_positions()
 
   def set_king(self, x, y):
     self.king = (x, y)
@@ -87,7 +88,6 @@ class Game:
         return False
       white_knight_index = white_knights.index([x, y])
       white_knights[white_knight_index] = [new_x, new_y]
-      self.set_white_knights(white_knights)
       self.set_board(self.change_white_knight_board(x, y, new_x, new_y))
       return True
   
@@ -110,11 +110,9 @@ class Game:
     elif board[new_y][new_x] in [WW, BW]:
       if self.move_white_knight(new_x, new_y, direction):
         self.set_board(self.change_king_board(x, y, new_x, new_y))
-        self.set_king(new_x, new_y)
         return 2
       return False
     self.set_board(self.change_king_board(x, y, new_x, new_y))
-    self.set_king(new_x, new_y)
     return True
 
   def undo_move(self, move):
@@ -202,6 +200,28 @@ class Game:
         elif board[y][x] == 8:
           pygame.draw.rect(WIN, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
           WIN.blit(K_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
+
+  def menu(self):
+    while True:
+      print("1. Human")
+      print("2. Computer")
+      choice = input("Choose your player (1 or 2): ")
+      if choice == '1':
+        return 'Human', ''
+      elif choice == '2':
+        while True:
+          print("1. BFS Algorithm")
+          print("2. DFS Algorithm")
+          # Add more algorithms here
+          algo_choice = input("Choose your algorithm (1 or 2): ")
+          if algo_choice == '1':
+            return 'Computer', 'BFS'
+          elif algo_choice == '2':
+            return 'Computer', 'DFS'
+          else:
+            print("Invalid choice. Please choose a valid algorithm.")
+      else:
+        print("Invalid choice. Please choose 1 for Human or 2 for Computer.")
 
   def dfs_king(self, max_depth, depth, path):
     king = self.king
