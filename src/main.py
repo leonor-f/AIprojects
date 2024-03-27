@@ -34,22 +34,16 @@ def main():
   win_textRect.center = (WIDTH // 2, 20)
   lose_textRect.center = (WIDTH // 2, 20)
 
-  GAME_IA = Game(Board(LEVEL).board)
-  GAME_PLAYER = Game(Board(LEVEL).board)
-
-  player, algorithm = GAME_PLAYER.menu()
-  print(f"Player: {player}, Algorithm: {algorithm}")
-
   while LEVEL < 5:
-    GAME_IA.set_board(Board(LEVEL).board)
-    GAME_PLAYER.set_board(Board(LEVEL).board)
+    GAME_IA = Game(Board(LEVEL).board)
+    GAME_PLAYER = Game(Board(LEVEL).board)
 
     display_text = text
     display_textRect = textRect
     
     run = True
-    dfs = 'DFS' == algorithm
-    bfs = 'BFS' == algorithm
+    dfs = True
+    bfs = False
     max_depth = [2, 6, 23, 23, 8]
 
     move_count = 0
@@ -82,23 +76,14 @@ def main():
             direction = 'right'
           elif event.key == pygame.K_SPACE:
             run = False
-            if player == 'Human':
-              if GAME_PLAYER.check_win():
-                display_text = win_text
-                display_textRect = win_textRect
-              else:
-                display_text = lose_text
-                display_textRect = lose_textRect
-                LEVEL -= 1
+            if GAME_IA.check_win():
+              display_text = win_text
+              display_textRect = win_textRect
             else:
-              if GAME_IA.check_win():
-                display_text = win_text
-                display_textRect = win_textRect
-              else:
-                display_text = lose_text
-                display_textRect = lose_textRect
-                LEVEL -= 1
-              break
+              display_text = lose_text
+              display_textRect = lose_textRect
+              LEVEL -= 1
+            break
           elif event.key == pygame.K_q:
             run = False
             LEVEL = 4
