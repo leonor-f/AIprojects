@@ -215,7 +215,7 @@ def main():
 
     while run:
       if dfs:
-        moves = GAME.dfs(MAX_DEPTH[level], 0, [])
+        moves = GAME.greedy(MAX_DEPTH[level], 0, [])
         GAME.set_board(Board(level).board)
         dfs = False
       elif bfs:

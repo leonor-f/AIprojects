@@ -238,3 +238,50 @@ class Game:
         queue.extend((copy.deepcopy(self.board), new_move, path + [tail]) for new_move in directions.keys())
         self.undo_move(tail)
     return []
+
+  def get_take_positions(black_knights, board):
+    take_positions = []
+    for black_knight in black_knights:
+      x, y = black_knight[:2]
+      take_positions_knight = [[x + 2, y + 1], [x + 1, y + 2], [x - 1, y + 2], [x - 2, y + 1], [x - 2, y - 1], [x - 1, y - 2], [x + 1, y - 2], [x + 2, y - 1]]
+      valid_take_positions_knight = []
+      for pos in take_positions_knight:
+        new_x, new_y = pos
+        if 0 <= new_x < 9 and 0 <= new_y < 9:
+          valid_take_positions_knight.append(pos)
+      take_positions.append(valid_take_positions_knight)
+    return take_positions
+
+  #greedy algorithm whose move heuristic is the distance between white_knights and take_positions
+  # if a white_knight is at a take_position, the king ignores it and goes after the remaining white_knights
+  def greedy(self, max_depth, depth, path):
+    king = self.king
+    white_knights = self.white_knights
+    black_knights = self.black_knights
+    take_positions = Game.get_take_positions(black_knights, self.board)
+    if depth >= max_depth:
+      return []
+    moves = [['right', 1, 0], ['up', 0, -1], ['left', -1, 0], ['down', 0, 1]]
+    for [direction, x, y] in moves:
+      new_x, new_y = king[0] + x, king[1] + y
+      value = self.move(direction)
+      if value or value == 2:
+        path.append((new_x, new_y, direction, value == 2))
+        if self.check_win():
+          return ["WIN", path]
+        take_positions = Game.get_take_positions(black_knights, self.board)
+        white_knights = self.white_knights
+        distances = []
+        for white_knight in white_knights:
+          distances.append(min([abs(white_knight[0] - pos[0]) + abs(white_knight[1] - pos[1]) for pos in take_positions[white_knights.index(white_knight)]], default=0))
+        if sum(distances) == 0:
+          return ["WIN", path]
+        tail = self.greedy(max_depth, depth + 1, path)
+        if len(tail) == 0:
+          if len(path) != 0:
+            self.undo_move(path.pop())
+        elif tail[0] == "WIN":
+          return tail
+        else:
+          path = tail
+    return []
