@@ -89,12 +89,10 @@ class Game:
       new_x, new_y = x, (y - 1) if y > 0 else 0
     elif direction == 'left':
       new_x, new_y = (x - 1) if x > 0 else 0, y
-      print("left")
     elif direction == 'down':
       new_x, new_y = x, (y + 1) if y < 8 else 8
     elif direction == 'right':
       new_x, new_y = (x + 1) if x < 8 else 8, y
-      print("right")
     else:
       return False
     

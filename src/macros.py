@@ -45,4 +45,4 @@ LEVEL_NINE_IMAGE_PATH = pygame.image.load("../img/levels/level_nine.png")
 LEVEL_TEN_IMAGE_PATH = pygame.image.load("../img/levels/level_ten.png")
 
 # ALGORITHM MACROS
-MAX_DEPTH = [2, 6, 8, 8, 14, 15, 15]
+MAX_DEPTH = [2, 6, 8, 8, 10, 15, 15]

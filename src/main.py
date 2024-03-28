@@ -217,23 +217,28 @@ def main():
     greedy = 'Greedy' == algorithm
 
     move_count = 0
+    n_moves = 0
     moves = []
 
     while run:
       if dfs:
         moves = GAME.dfs(MAX_DEPTH[level - 1], 0, [])
+        n_moves = len(moves[1])
         GAME.set_board(Board(level).board)
         dfs = False
       elif bfs:
         moves = GAME.bfs()
+        n_moves = len(moves[1])
         GAME.set_board(Board(level).board)
         bfs = False
       elif iddfs:
         moves = GAME.iddfs(MAX_DEPTH[level - 1] + 1)
+        n_moves = len(moves[1])
         GAME.set_board(Board(level).board)
         iddfs = False
       elif greedy:
         moves = GAME.greedy(MAX_DEPTH[level - 1], 0, [])
+        n_moves = len(moves[1])
         GAME.set_board(Board(level).board)
         greedy = False
       
@@ -267,10 +272,10 @@ def main():
             if direction != '':
               GAME.move(direction)
           else:
-            if event.key == pygame.K_n and move_count < MAX_DEPTH[level - 1]:
+            if event.key == pygame.K_n and move_count < n_moves:
               GAME.move(moves[1][move_count][2])
               move_count += 1
-              if move_count == MAX_DEPTH[level - 1]:
+              if move_count == n_moves:
                 display_text = WIN_TEXT
                 display_textRect = WIN_TEXT_RECT
                 level += 1
