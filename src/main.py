@@ -79,6 +79,7 @@ def draw_start_menu(win):
   win.blit(BFS_IMAGE_PATH, (50, 600))
   win.blit(A_STAR_IMAGE_PATH, (460, 600))
   win.blit(IDDFS_IMAGE_PATH, (50, 700))
+  win.blit(GREEDY_IMAGE_PATH, (460, 700))
   pygame.display.update()
 
   while True:
@@ -97,6 +98,8 @@ def draw_start_menu(win):
           return 'AI', 'A*'
         elif 50 <= x <= 350 and 700 <= y <= 780:
           return 'AI', 'IDDFS'
+        elif 460 <= x <= 760 and 700 <= y <= 780:
+          return 'AI', 'Greedy'
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_q:
           return '', ''
@@ -110,6 +113,8 @@ def draw_start_menu(win):
           return 'AI', 'A*'
         elif event.key == pygame.K_5:
           return 'AI', 'IDDFS'
+        elif event.key == pygame.K_6:
+          return 'AI', 'Greedy'
 
 def draw_menu(win):
   win.fill((112, 113, 160))
@@ -209,13 +214,14 @@ def main():
     dfs = 'DFS' == algorithm
     bfs = 'BFS' == algorithm
     iddfs = 'IDDFS' == algorithm
+    greedy = 'Greedy' == algorithm
 
     move_count = 0
     moves = []
 
     while run:
       if dfs:
-        moves = GAME.greedy(MAX_DEPTH[level], 0, [])
+        moves = GAME.dfs(MAX_DEPTH[level], 0, [])
         GAME.set_board(Board(level).board)
         dfs = False
       elif bfs:
@@ -226,6 +232,10 @@ def main():
         moves = GAME.iddfs(MAX_DEPTH[level] + 1)
         GAME.set_board(Board(level).board)
         iddfs = False
+      elif greedy:
+        moves = GAME.greedy(MAX_DEPTH[level], 0, [])
+        GAME.set_board(Board(level).board)
+        greedy = False
       
       for event in pygame.event.get():
         if event.type == pygame.QUIT:

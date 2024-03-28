@@ -31,6 +31,7 @@ DFS_IMAGE_PATH = pygame.image.load("../img/buttons/dfs.png")
 BFS_IMAGE_PATH = pygame.image.load("../img/buttons/bfs.png")
 A_STAR_IMAGE_PATH = pygame.image.load("../img/buttons/a_star.png")
 IDDFS_IMAGE_PATH = pygame.image.load("../img/buttons/iddfs.png")
+GREEDY_IMAGE_PATH = pygame.image.load("../img/buttons/greedy.png")
 # LEVELS
 LEVEL_ONE_IMAGE_PATH = pygame.image.load("../img/levels/level_one.png")
 LEVEL_TWO_IMAGE_PATH = pygame.image.load("../img/levels/level_two.png")
