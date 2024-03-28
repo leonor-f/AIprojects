@@ -252,8 +252,6 @@ class Game:
       take_positions.append(valid_take_positions_knight)
     return take_positions
 
-  #greedy algorithm whose move heuristic is the distance between white_knights and take_positions
-  # if a white_knight is at a take_position, the king ignores it and goes after the remaining white_knights
   def greedy(self, max_depth, depth, path):
     king = self.king
     white_knights = self.white_knights
