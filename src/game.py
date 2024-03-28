@@ -1,16 +1,7 @@
 import pygame
 import copy
-from time import sleep
 from collections import deque
-
-W = 1
-B = 2
-WW = 3
-WB = 4
-BW = 5
-BB = 6
-WK = 7
-BK = 8
+from macros import *
 
 class Game:
   def __init__(self, board):
@@ -172,56 +163,34 @@ class Game:
         return True
       return False
   
-  def draw(self, WIN, SQUARE_SIZE, WK_IMAGE_PATH, BK_IMAGE_PATH, K_IMAGE_PATH):
+  def draw(self, win):
     board = self.board
     for y in range(self.rows):
       for x in range(self.cols):
         if board[y][x] == W:
-          pygame.draw.rect(WIN, (255, 255, 255), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+          pygame.draw.rect(win, (255, 255, 255), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
         elif board[y][x] == B:
-          pygame.draw.rect(WIN, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
-        elif board[y][x] == 0:
-          pygame.draw.rect(WIN, (112, 113, 160), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+          pygame.draw.rect(win, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+        elif board[y][x] == N:
+          pygame.draw.rect(win, (112, 113, 160), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
         elif board[y][x] == WW:
-          pygame.draw.rect(WIN, (255, 255, 255), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
-          WIN.blit(WK_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
+          pygame.draw.rect(win, (255, 255, 255), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+          win.blit(WK_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
         elif board[y][x] == WB:
-          pygame.draw.rect(WIN, (255, 255, 255), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
-          WIN.blit(BK_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
+          pygame.draw.rect(win, (255, 255, 255), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+          win.blit(BK_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
         elif board[y][x] == BW:
-          pygame.draw.rect(WIN, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
-          WIN.blit(WK_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
+          pygame.draw.rect(win, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+          win.blit(WK_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
         elif board[y][x] == BB:
-          pygame.draw.rect(WIN, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
-          WIN.blit(BK_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
+          pygame.draw.rect(win, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+          win.blit(BK_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
         elif board[y][x] == WK:
-          pygame.draw.rect(WIN, (255, 255, 255), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
-          WIN.blit(K_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
-        elif board[y][x] == 8:
-          pygame.draw.rect(WIN, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
-          WIN.blit(K_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
-
-  def menu(self):
-    while True:
-      print("1. Human")
-      print("2. Computer")
-      choice = input("Choose your player (1 or 2): ")
-      if choice == '1':
-        return 'Human', ''
-      elif choice == '2':
-        while True:
-          print("1. BFS Algorithm")
-          print("2. DFS Algorithm")
-          # Add more algorithms here
-          algo_choice = input("Choose your algorithm (1 or 2): ")
-          if algo_choice == '1':
-            return 'Computer', 'BFS'
-          elif algo_choice == '2':
-            return 'Computer', 'DFS'
-          else:
-            print("Invalid choice. Please choose a valid algorithm.")
-      else:
-        print("Invalid choice. Please choose 1 for Human or 2 for Computer.")
+          pygame.draw.rect(win, (255, 255, 255), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+          win.blit(K_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
+        elif board[y][x] == BK:
+          pygame.draw.rect(win, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
+          win.blit(K_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
 
   def dfs_king(self, max_depth, depth, path):
     king = self.king

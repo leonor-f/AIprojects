@@ -1,11 +1,4 @@
-W = 1 # white square
-B = 2 # black square
-WW = 3 # white square and white knight
-WB = 4 # white square and black knight
-BW = 5 # black square and white knight
-BB = 6 # black square and black knight
-WK = 7 # white square and king
-BK = 8 # black square and king
+from macros import *
 
 class Board:
   def __init__(self, level):
@@ -14,64 +7,63 @@ class Board:
   def get_board(self, level):
     if level == 0:
       return [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, W, B, W, B, W, 0, 0],
-        [0, 0, BK, WW, B, W, B, 0, 0],
-        [0, 0, W, B, W, B, W, 0, 0],
-        [0, 0, B, W, B, W, BB, 0, 0],
-        [0, 0, W, B, W, B, W, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [N, N, N, N, N, N, N, N, N],
+        [N, N, N, N, N, N, N, N, N],
+        [N, N, W, B, W, B, W, N, N],
+        [N, N, BK, WW, B, W, B, N, N],
+        [N, N, W, B, W, B, W, N, N],
+        [N, N, B, W, B, W, BB, N, N],
+        [N, N, W, B, W, B, W, N, N],
+        [N, N, N, N, N, N, N, N, N],
+        [N, N, N, N, N, N, N, N, N],
       ]
     elif level == 1:
       return [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, BB, 0, 0],
-        [0, 0, WB, 0, 0, 0, W, 0, 0],
-        [0, 0, B, W, B, W, B, 0, 0],
-        [0, 0, 0, B, W, BW, 0, 0, 0],
-        [0, 0, 0, W, BW, WK, 0, 0, 0],
-        [0, 0, 0, B, W, B, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        [N, N, N, N, N, N, N, N, N],
+        [N, N, N, N, N, N, BB, N, N],
+        [N, N, WB, N, N, N, W, N, N],
+        [N, N, B, W, B, W, B, N, N],
+        [N, N, N, B, W, BW, N, N, N],
+        [N, N, N, W, BW, WK, N, N, N],
+        [N, N, N, B, W, B, N, N, N],
+        [N, N, N, N, N, N, N, N, N],
+        [N, N, N, N, N, N, N, N, N]
       ]
     elif level == 2:
       return [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, WB, 0, W, 0, W, 0, 0],
-        [0, 0, B, 0, B, 0, BB, 0, 0],
-        [0, 0, W, 0, W, 0, W, 0, 0],
-        [0, 0, B, 0, B, 0, B, 0, 0],
-        [0, 0, W, 0, W, 0, W, 0, 0],
-        [0, 0, B, WW, B, WW, B, 0, 0],
-        [0, 0, W, B, WK, B, W, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        [N, N, N, N, N, N, N, N, N],
+        [N, N, WB, N, W, N, W, N, N],
+        [N, N, B, N, B, N, BB, N, N],
+        [N, N, W, N, W, N, W, N, N],
+        [N, N, B, N, B, N, B, N, N],
+        [N, N, W, N, W, N, W, N, N],
+        [N, N, B, WW, B, WW, B, N, N],
+        [N, N, W, B, WK, B, W, N, N],
+        [N, N, N, N, N, N, N, N, N]
       ]
     elif level == 3:
       return [
-        [0, 0, WB, 0, 0, 0, 0, 0, 0],
-        [BB, W, B, W, B, W, BW, WK, 0],
-        [0, 0, W, B, 0, 0, W, B, W],
-        [B, W, B, W, B, WW, B, 0, BB],
-        [W, 0, W, B, W, B, W, 0, 0],
-        [B, 0, B, WW, B, W, B, 0, 0],
-        [W, 0, W, B, 0, 0, 0, 0, 0],
-        [B, W, B, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        [N, N, WB, N, N, N, N, N, N],
+        [BB, W, B, W, B, W, BW, WK, N],
+        [N, N, W, B, N, N, W, B, W],
+        [B, W, B, W, B, WW, B, N, BB],
+        [W, N, W, B, W, B, W, N, N],
+        [B, N, B, WW, B, W, B, N, N],
+        [W, N, W, B, N, N, N, N, N],
+        [B, W, B, N, N, N, N, N, N],
+        [N, N, N, N, N, N, N, N, N]
       ]
     elif level == 4:
       return [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, B, 0, 0, 0, 0],
-        [0, 0, W, 0, WK, B, W, B, W],
-        [0, W, B, W, B, WW, BW, W, B],
-        [0, 0, W, B, WB, B, WB, B, W],
-        [0, 0, B, W, B, W, B, W, B],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        [N, N, N, N, N, N, N, N, N],
+        [N, N, N, N, N, N, N, N, N],
+        [N, N, N, N, B, N, N, N, N],
+        [N, N, W, N, WK, B, W, B, W],
+        [N, W, B, W, B, WW, BW, W, B],
+        [N, N, W, B, WB, B, WB, B, W],
+        [N, N, B, W, B, W, B, W, B],
+        [N, N, N, N, N, N, N, N, N],
+        [N, N, N, N, N, N, N, N, N]
       ]
     else:
-      pass
-
+      return []
