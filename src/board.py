@@ -5,7 +5,7 @@ class Board:
     self.board = self.get_board(level)
   
   def get_board(self, level):
-    if level == 0:
+    if level == 1:
       return [
         [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, N, N],
@@ -17,7 +17,7 @@ class Board:
         [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, N, N],
       ]
-    elif level == 1:
+    elif level == 2:
       return [
         [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, BB, N, N],
@@ -29,7 +29,7 @@ class Board:
         [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, N, N]
       ]
-    elif level == 2:
+    elif level == 3:
       return [
         [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, N, N],
@@ -41,7 +41,7 @@ class Board:
         [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, N, N]
       ]
-    elif level == 3:
+    elif level == 4:
       return [
         [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, N, N],
@@ -53,7 +53,7 @@ class Board:
         [N, N, W, B, WK, B, W, N, N],
         [N, N, N, N, N, N, N, N, N]
       ]
-    elif level == 4:
+    elif level == 5:
       return [
         [N, N, WB, N, N, N, N, N, N],
         [B, W, B, W, B, W, BW, WK, N],
@@ -65,7 +65,7 @@ class Board:
         [B, W, B, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, N, N]
       ]
-    elif level == 5:
+    elif level == 6:
       return [
         [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, N, N],
@@ -77,7 +77,7 @@ class Board:
         [WB, B, W, B, W, B, W, BW, W],
         [N, N, N, N, N, N, N, N, N]
       ]
-    elif level == 6:
+    elif level == 7:
       return [
         [N, N, N, N, WB, B, N, N, N],
         [N, N, N, N, N, W, N, N, N],

@@ -23,52 +23,52 @@ def draw_levels_menu(win):
   while True:
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
-        return -1
+        return 0
       if event.type == pygame.MOUSEBUTTONDOWN:
         x, y = pygame.mouse.get_pos()
         if 68 <= x <= 148 and 400 <= y <= 480:
-          return 0
-        elif 216 <= x <= 296 and 400 <= y <= 480:
           return 1
-        elif 364 <= x <= 444 and 400 <= y <= 480:
+        elif 216 <= x <= 296 and 400 <= y <= 480:
           return 2
-        elif 512 <= x <= 592 and 400 <= y <= 480:
+        elif 364 <= x <= 444 and 400 <= y <= 480:
           return 3
-        elif 660 <= x <= 740 and 400 <= y <= 480:
+        elif 512 <= x <= 592 and 400 <= y <= 480:
           return 4
-        elif 68 <= x <= 148 and 600 <= y <= 680:
+        elif 660 <= x <= 740 and 400 <= y <= 480:
           return 5
-        elif 216 <= x <= 296 and 600 <= y <= 680:
+        elif 68 <= x <= 148 and 600 <= y <= 680:
           return 6
-        elif 364 <= x <= 444 and 600 <= y <= 680:
+        elif 216 <= x <= 296 and 600 <= y <= 680:
           return 7
-        elif 512 <= x <= 592 and 600 <= y <= 680:
+        elif 364 <= x <= 444 and 600 <= y <= 680:
           return 8
-        elif 660 <= x <= 740 and 600 <= y <= 680:
+        elif 512 <= x <= 592 and 600 <= y <= 680:
           return 9
+        elif 660 <= x <= 740 and 600 <= y <= 680:
+          return 10
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_q:
-          return -1
-        elif event.key == pygame.K_1:
           return 0
-        elif event.key == pygame.K_2:
+        elif event.key == pygame.K_1:
           return 1
-        elif event.key == pygame.K_3:
+        elif event.key == pygame.K_2:
           return 2
-        elif event.key == pygame.K_4:
+        elif event.key == pygame.K_3:
           return 3
-        elif event.key == pygame.K_5:
+        elif event.key == pygame.K_4:
           return 4
-        elif event.key == pygame.K_6:
+        elif event.key == pygame.K_5:
           return 5
-        elif event.key == pygame.K_7:
+        elif event.key == pygame.K_6:
           return 6
-        elif event.key == pygame.K_8:
+        elif event.key == pygame.K_7:
           return 7
-        elif event.key == pygame.K_9:
+        elif event.key == pygame.K_8:
           return 8
-        elif event.key == pygame.K_0:
+        elif event.key == pygame.K_9:
           return 9
+        elif event.key == pygame.K_0:
+          return 10
 
 def draw_start_menu(win):
   win.fill((112, 113, 160))
@@ -176,7 +176,7 @@ def main():
   AI_TEXT_RECT.center = (WIDTH // 2, 20)
 
   # GAME INITIALIZATION
-  level = 0
+  level = 1
   GAME = Game(Board(level).board)
 
   menu_option = draw_menu(win)
@@ -184,23 +184,23 @@ def main():
   if menu_option == 1:
     player, algorithm = draw_start_menu(win)
     if player == '':
-      level = 7
+      level = 8
   elif menu_option == 2:
-    level = 7
+    level = 8
   elif menu_option == 3:
     level_option = draw_levels_menu(win)
-    if level_option == -1:
-      level = 7
+    if level_option == 0:
+      level = 8
     else:
       player, algorithm = draw_start_menu(win)
       level = level_option
       if player == '':
-        level = 7
+        level = 8
   elif menu_option == 4:
     # TODO show how to play, change what is below
     player, algorithm = 'Human', ''
 
-  while level < 7:
+  while level < 8:
     GAME.set_board(Board(level).board)
 
     if player == 'AI':
@@ -221,7 +221,7 @@ def main():
 
     while run:
       if dfs:
-        moves = GAME.dfs(MAX_DEPTH[level], 0, [])
+        moves = GAME.dfs(MAX_DEPTH[level - 1], 0, [])
         GAME.set_board(Board(level).board)
         dfs = False
       elif bfs:
@@ -229,11 +229,11 @@ def main():
         GAME.set_board(Board(level).board)
         bfs = False
       elif iddfs:
-        moves = GAME.iddfs(MAX_DEPTH[level] + 1)
+        moves = GAME.iddfs(MAX_DEPTH[level - 1] + 1)
         GAME.set_board(Board(level).board)
         iddfs = False
       elif greedy:
-        moves = GAME.greedy(MAX_DEPTH[level], 0, [])
+        moves = GAME.greedy(MAX_DEPTH[level - 1], 0, [])
         GAME.set_board(Board(level).board)
         greedy = False
       
@@ -262,15 +262,15 @@ def main():
                 display_textRect = LOSE_TEXT_RECT
             elif event.key == pygame.K_q:
               run = False
-              level = 7
+              level = 8
               break
             if direction != '':
               GAME.move(direction)
           else:
-            if event.key == pygame.K_n and move_count < MAX_DEPTH[level]:
+            if event.key == pygame.K_n and move_count < MAX_DEPTH[level - 1]:
               GAME.move(moves[1][move_count][2])
               move_count += 1
-              if move_count == MAX_DEPTH[level]:
+              if move_count == MAX_DEPTH[level - 1]:
                 display_text = WIN_TEXT
                 display_textRect = WIN_TEXT_RECT
                 level += 1
@@ -278,7 +278,7 @@ def main():
                 break
             elif event.key == pygame.K_q:
               run = False
-              level = 7
+              level = 8
               break
             
       GAME.draw(win)

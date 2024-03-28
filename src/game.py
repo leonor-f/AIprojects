@@ -86,13 +86,15 @@ class Game:
     x, y = self.king
     board = self.board
     if direction == 'up':
-      new_x, new_y = x % 9, (y - 1) % 9
+      new_x, new_y = x, (y - 1) if y > 0 else 0
     elif direction == 'left':
-      new_x, new_y = (x - 1) % 9, y % 9
+      new_x, new_y = (x - 1) if x > 0 else 0, y
+      print("left")
     elif direction == 'down':
-      new_x, new_y = x % 9, (y + 1) % 9
+      new_x, new_y = x, (y + 1) if y < 8 else 8
     elif direction == 'right':
-      new_x, new_y = (x + 1) % 9, y % 9
+      new_x, new_y = (x + 1) if x < 8 else 8, y
+      print("right")
     else:
       return False
     
@@ -102,6 +104,8 @@ class Game:
       if self.move_white_knight(new_x, new_y, direction):
         self.set_board(self.change_king_board(x, y, new_x, new_y))
         return 2
+      return False
+    elif board[new_y][new_x] in [WK, BK]:
       return False
     self.set_board(self.change_king_board(x, y, new_x, new_y))
     return True
