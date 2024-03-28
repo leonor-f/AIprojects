@@ -69,7 +69,7 @@ class Board:
       return [
         [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, N, N],
-        [N, N, N, N, N, N, N, WW, N],
+        [N, N, N, N, N, N, N, WB, N],
         [N, N, N, N, N, N, W, B, W],
         [B, W, B, W, N, N, B, W, B],
         [N, B, N, B, WK, BW, WW, N, WB],

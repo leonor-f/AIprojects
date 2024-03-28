@@ -241,7 +241,8 @@ class Game:
         self.undo_move(tail)
     return []
 
-  def get_take_positions(black_knights, board):
+  def get_take_positions(self, black_knights):
+    board = self.board
     take_positions = []
     for black_knight in black_knights:
       x, y = black_knight[:2]
@@ -249,7 +250,7 @@ class Game:
       valid_take_positions_knight = []
       for pos in take_positions_knight:
         new_x, new_y = pos
-        if 0 <= new_x < 9 and 0 <= new_y < 9:
+        if 0 <= new_x < 9 and 0 <= new_y < 9 and board[new_y][new_x] not in [N, WB, BB]:
           valid_take_positions_knight.append(pos)
       take_positions.append(valid_take_positions_knight)
     return take_positions
@@ -258,7 +259,7 @@ class Game:
     king = self.king
     white_knights = self.white_knights
     black_knights = self.black_knights
-    take_positions = Game.get_take_positions(black_knights, self.board)
+    take_positions = self.get_take_positions(black_knights)
     if depth >= max_depth:
       return []
     moves = [['right', 1, 0], ['up', 0, -1], ['left', -1, 0], ['down', 0, 1]]
@@ -269,7 +270,7 @@ class Game:
         path.append((new_x, new_y, direction, value == 2))
         if self.check_win():
           return ["WIN", path]
-        take_positions = Game.get_take_positions(black_knights, self.board)
+        take_positions = self.get_take_positions(black_knights)
         white_knights = self.white_knights
         distances = []
         for white_knight in white_knights:
