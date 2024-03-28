@@ -192,11 +192,11 @@ class Game:
           pygame.draw.rect(win, (0, 0, 0), (x*SQUARE_SIZE, y*SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
           win.blit(K_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
 
-  def dfs_king(self, max_depth, depth, path):
+  def dfs(self, max_depth, depth, path):
     king = self.king
     if depth >= max_depth:
       return []
-    moves = [['right', 1, 0], ['left', -1, 0], ['down', 0, 1], ['up', 0, -1]]
+    moves = [['right', 1, 0], ['up', 0, -1], ['left', -1, 0], ['down', 0, 1]]
     for [direction, x, y] in moves:
       new_x, new_y = king[0] + x, king[1] + y
       value = self.move(direction)
@@ -204,7 +204,7 @@ class Game:
         path.append((new_x, new_y, direction, value == 2))
         if self.check_win():
           return ["WIN", path]
-        tail = self.dfs_king(max_depth, depth + 1, path)
+        tail = self.dfs(max_depth, depth + 1, path)
         if len(tail) == 0:
           if len(path) != 0:
             self.undo_move(path.pop())
@@ -213,8 +213,15 @@ class Game:
         else:
           path = tail
     return []
+  
+  def iddfs(self, max_depth):
+    for depth in range(max_depth):
+      result = self.dfs(depth, 0, [])
+      if len(result) > 0 and result[0] == "WIN":
+        return result
+    return []
 
-  def bfs_king(self):
+  def bfs(self):
     directions = {'right': (1, 0), 'left': (-1, 0), 'down': (0, 1), 'up': (0, -1)}
     queue = deque([(copy.deepcopy(self.board), move, []) for move in directions.keys()])
     while queue:

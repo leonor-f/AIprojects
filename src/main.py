@@ -78,6 +78,7 @@ def draw_start_menu(win):
   win.blit(DFS_IMAGE_PATH, (460, 500))
   win.blit(BFS_IMAGE_PATH, (50, 600))
   win.blit(A_STAR_IMAGE_PATH, (460, 600))
+  win.blit(IDDFS_IMAGE_PATH, (50, 700))
   pygame.display.update()
 
   while True:
@@ -94,6 +95,8 @@ def draw_start_menu(win):
           return 'AI', 'BFS'
         elif 460 <= x <= 760 and 600 <= y <= 680:
           return 'AI', 'A*'
+        elif 50 <= x <= 350 and 700 <= y <= 780:
+          return 'AI', 'IDDFS'
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_q:
           return '', ''
@@ -105,6 +108,8 @@ def draw_start_menu(win):
           return 'AI', 'BFS'
         elif event.key == pygame.K_4:
           return 'AI', 'A*'
+        elif event.key == pygame.K_5:
+          return 'AI', 'IDDFS'
 
 def draw_menu(win):
   win.fill((112, 113, 160))
@@ -174,23 +179,23 @@ def main():
   if menu_option == 1:
     player, algorithm = draw_start_menu(win)
     if player == '':
-      level = 5
+      level = 7
   elif menu_option == 2:
-    level = 5
+    level = 7
   elif menu_option == 3:
     level_option = draw_levels_menu(win)
     if level_option == -1:
-      level = 5
+      level = 7
     else:
       player, algorithm = draw_start_menu(win)
       level = level_option
       if player == '':
-        level = 5
+        level = 7
   elif menu_option == 4:
     # TODO show how to play, change what is below
     player, algorithm = 'Human', ''
 
-  while level < 5:
+  while level < 7:
     GAME.set_board(Board(level).board)
 
     if player == 'AI':
@@ -203,20 +208,24 @@ def main():
     run = True
     dfs = 'DFS' == algorithm
     bfs = 'BFS' == algorithm
+    iddfs = 'IDDFS' == algorithm
 
     move_count = 0
     moves = []
 
     while run:
       if dfs:
-        moves = GAME.dfs_king(MAX_DEPTH[level], 0, [])
+        moves = GAME.dfs(MAX_DEPTH[level], 0, [])
         GAME.set_board(Board(level).board)
         dfs = False
-      
-      if bfs:
-        moves = GAME.bfs_king()
+      elif bfs:
+        moves = GAME.bfs()
         GAME.set_board(Board(level).board)
         bfs = False
+      elif iddfs:
+        moves = GAME.iddfs(MAX_DEPTH[level] + 1)
+        GAME.set_board(Board(level).board)
+        iddfs = False
       
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -243,7 +252,7 @@ def main():
                 display_textRect = LOSE_TEXT_RECT
             elif event.key == pygame.K_q:
               run = False
-              level = 5
+              level = 7
               break
             if direction != '':
               GAME.move(direction)
@@ -259,7 +268,7 @@ def main():
                 break
             elif event.key == pygame.K_q:
               run = False
-              level = 5
+              level = 7
               break
             
       GAME.draw(win)

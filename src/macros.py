@@ -30,6 +30,7 @@ HUMAN_IMAGE_PATH = pygame.image.load("../img/buttons/human.png")
 DFS_IMAGE_PATH = pygame.image.load("../img/buttons/dfs.png")
 BFS_IMAGE_PATH = pygame.image.load("../img/buttons/bfs.png")
 A_STAR_IMAGE_PATH = pygame.image.load("../img/buttons/a_star.png")
+IDDFS_IMAGE_PATH = pygame.image.load("../img/buttons/iddfs.png")
 # LEVELS
 LEVEL_ONE_IMAGE_PATH = pygame.image.load("../img/levels/level_one.png")
 LEVEL_TWO_IMAGE_PATH = pygame.image.load("../img/levels/level_two.png")
@@ -43,4 +44,4 @@ LEVEL_NINE_IMAGE_PATH = pygame.image.load("../img/levels/level_nine.png")
 LEVEL_TEN_IMAGE_PATH = pygame.image.load("../img/levels/level_ten.png")
 
 # ALGORITHM MACROS
-MAX_DEPTH = [2, 6, 23, 23, 8]
+MAX_DEPTH = [2, 6, 8, 15, 15, 23, 23,]
