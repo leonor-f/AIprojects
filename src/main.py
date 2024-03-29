@@ -148,11 +148,11 @@ def draw_menu(win):
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_1:
           return 1
-        elif event.key == pygame.K_2 or event.key == pygame.K_q:
+        elif event.key == pygame.K_2:
           return 2
         elif event.key == pygame.K_3:
           return 3
-        elif event.key == pygame.K_4:
+        elif event.key == pygame.K_4 or event.key == pygame.K_q:
           return 4
 
 def main():
@@ -191,8 +191,6 @@ def main():
     if player == '':
       level = 10
   elif menu_option == 2:
-    level = 10
-  elif menu_option == 3:
     level_option = draw_levels_menu(win)
     if level_option == 0:
       level = 10
@@ -201,9 +199,11 @@ def main():
       level = level_option
       if player == '':
         level = 10
-  elif menu_option == 4:
+  elif menu_option == 3:
     # TODO show how to play, change what is below
     player, algorithm = 'Human', ''
+  elif menu_option == 4:
+    level = 10
 
   while level < 10:
     GAME.set_board(Board(level).board)
