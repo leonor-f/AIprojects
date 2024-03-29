@@ -74,10 +74,13 @@ def draw_start_menu(win):
   win.fill((112, 113, 160))
   
   win.blit(TITLE_IMAGE_PATH, (105, 100))
-  win.blit(HUMAN_IMAGE_PATH, (50, 500))
-  win.blit(IDDFS_IMAGE_PATH, (460, 500))
-  win.blit(BFS_IMAGE_PATH, (50, 600))
-  win.blit(A_STAR_SUM_DISTANCE_IMAGE_PATH, (460, 600))
+  win.blit(HUMAN_IMAGE_PATH, (50, 400))
+  win.blit(IDDFS_IMAGE_PATH, (460, 400))
+  win.blit(BFS_IMAGE_PATH, (50, 500))
+  win.blit(A_STAR_SUM_DISTANCE_IMAGE_PATH, (460, 500))
+  win.blit(A_STAR_MAX_DISTANCE_IMAGE_PATH, (50, 600))
+  win.blit(A_STAR_KNIGHTS_NOT_IN_POSITION_IMAGE_PATH, (460, 600))
+  win.blit(A_STAR_COMBINED_IMAGE_PATH, (50, 700))
   win.blit(GREEDY_IMAGE_PATH, (460, 700))
   pygame.display.update()
 
@@ -87,16 +90,20 @@ def draw_start_menu(win):
         return '', ''
       if event.type == pygame.MOUSEBUTTONDOWN:
         x, y = pygame.mouse.get_pos()
-        if 50 <= x <= 350 and 500 <= y <= 580:
+        if 50 <= x <= 350 and 400 <= y <= 480:
           return 'Human', ''
-        elif 460 <= x <= 760 and 500 <= y <= 580:
+        elif 460 <= x <= 760 and 400 <= y <= 480:
           return 'AI', 'IDDFS'
-        elif 50 <= x <= 350 and 600 <= y <= 680:
+        elif 50 <= x <= 350 and 500 <= y <= 580:
           return 'AI', 'BFS'
-        elif 460 <= x <= 760 and 600 <= y <= 680:
+        elif 460 <= x <= 760 and 500 <= y <= 580:
           return 'AI', 'A_STAR_SUM_DISTANCE'
+        elif 50 <= x <= 350 and 600 <= y <= 680:
+          return 'AI', 'A_STAR_MAX_DISTANCE'
+        elif 460 <= x <= 760 and 600 <= y <= 680:
+          return 'AI', 'A_START_KNIGHTS'
         elif 50 <= x <= 350 and 700 <= y <= 780:
-          return 'AI', 'IDGreedy'
+          return 'AI', 'A_STAR_COMBINED'
         elif 460 <= x <= 760 and 700 <= y <= 780:
           return 'AI', 'Greedy'
       elif event.type == pygame.KEYDOWN:
@@ -111,14 +118,12 @@ def draw_start_menu(win):
         elif event.key == pygame.K_4:
           return 'AI', 'A_STAR_SUM_DISTANCE'
         elif event.key == pygame.K_5:
-          pass
-        elif event.key == pygame.K_6:
-          return 'AI', 'Greedy'
-        elif event.key == pygame.K_7:
           return 'AI', 'A_STAR_MAX_DISTANCE'
-        elif event.key == pygame.K_8:
+        elif event.key == pygame.K_6:
           return 'AI', 'A_STAR_KNIGHTS'
-        elif event.key == pygame.K_9:
+        elif event.key == pygame.K_7:
+          return 'AI', 'A_STAR_COMBINED'
+        elif event.key == pygame.K_8:
           return 'AI', 'A_STAR_COMBINED'
 
 def draw_menu(win):
