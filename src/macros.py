@@ -28,10 +28,9 @@ LEVELS_IMAGE_PATH = pygame.image.load("../img/buttons/levels.png")
 CONFIG_IMAGE_PATH = pygame.image.load("../img/buttons/config.png")
 HUMAN_IMAGE_PATH = pygame.image.load("../img/buttons/human.png")
 BFS_IMAGE_PATH = pygame.image.load("../img/buttons/bfs.png")
-A_STAR_IMAGE_PATH = pygame.image.load("../img/buttons/a_star.png")
+A_STAR_SUM_DISTANCE_IMAGE_PATH = pygame.image.load("../img/buttons/a_star_sum_distance.png")
 IDDFS_IMAGE_PATH = pygame.image.load("../img/buttons/iddfs.png")
 GREEDY_IMAGE_PATH = pygame.image.load("../img/buttons/greedy.png")
-IDGREEDY_IMAGE_PATH = pygame.image.load("../img/buttons/idgreedy.png")
 # LEVELS
 LEVEL_ONE_IMAGE_PATH = pygame.image.load("../img/levels/level_one.png")
 LEVEL_TWO_IMAGE_PATH = pygame.image.load("../img/levels/level_two.png")
@@ -43,3 +42,13 @@ LEVEL_SEVEN_IMAGE_PATH = pygame.image.load("../img/levels/level_seven.png")
 LEVEL_EIGHT_IMAGE_PATH = pygame.image.load("../img/levels/level_eight.png")
 LEVEL_NINE_IMAGE_PATH = pygame.image.load("../img/levels/level_nine.png")
 LEVEL_TEN_IMAGE_PATH = pygame.image.load("../img/levels/level_ten.png")
+
+# MOVEMENT MACROS
+RIGHT = ['right', 1, 0]
+UP = ['up', 0, -1]
+LEFT = ['left', -1, 0]
+DOWN = ['down', 0, 1]
+MOVES = [RIGHT, UP, LEFT, DOWN]
+
+# GAME STATE MACROS
+KNIGHT_TAKEN = 2

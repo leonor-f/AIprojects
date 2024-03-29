@@ -77,8 +77,7 @@ def draw_start_menu(win):
   win.blit(HUMAN_IMAGE_PATH, (50, 500))
   win.blit(IDDFS_IMAGE_PATH, (460, 500))
   win.blit(BFS_IMAGE_PATH, (50, 600))
-  win.blit(A_STAR_IMAGE_PATH, (460, 600))
-  win.blit(IDGREEDY_IMAGE_PATH, (50, 700))
+  win.blit(A_STAR_SUM_DISTANCE_IMAGE_PATH, (460, 600))
   win.blit(GREEDY_IMAGE_PATH, (460, 700))
   pygame.display.update()
 
@@ -95,7 +94,7 @@ def draw_start_menu(win):
         elif 50 <= x <= 350 and 600 <= y <= 680:
           return 'AI', 'BFS'
         elif 460 <= x <= 760 and 600 <= y <= 680:
-          return 'AI', 'A*'
+          return 'AI', 'A_STAR_SUM_DISTANCE'
         elif 50 <= x <= 350 and 700 <= y <= 780:
           return 'AI', 'IDGreedy'
         elif 460 <= x <= 760 and 700 <= y <= 780:
@@ -110,20 +109,26 @@ def draw_start_menu(win):
         elif event.key == pygame.K_3:
           return 'AI', 'BFS'
         elif event.key == pygame.K_4:
-          return 'AI', 'A*'
+          return 'AI', 'A_STAR_SUM_DISTANCE'
         elif event.key == pygame.K_5:
-          return 'AI', 'IDGreedy'
+          pass
         elif event.key == pygame.K_6:
           return 'AI', 'Greedy'
+        elif event.key == pygame.K_7:
+          return 'AI', 'A_STAR_MAX_DISTANCE'
+        elif event.key == pygame.K_8:
+          return 'AI', 'A_STAR_KNIGHTS'
+        elif event.key == pygame.K_9:
+          return 'AI', 'A_STAR_COMBINED'
 
 def draw_menu(win):
   win.fill((112, 113, 160))
 
   win.blit(TITLE_IMAGE_PATH, (105, 100))
   win.blit(START_IMAGE_PATH, (50, 500))
-  win.blit(EXIT_IMAGE_PATH, (460, 500))
-  win.blit(LEVELS_IMAGE_PATH, (50, 600))
-  win.blit(CONFIG_IMAGE_PATH, (460, 600))
+  win.blit(LEVELS_IMAGE_PATH, (460, 500))
+  win.blit(CONFIG_IMAGE_PATH, (50, 600))
+  win.blit(EXIT_IMAGE_PATH, (460, 600))
   pygame.display.update()
 
   while True:
@@ -213,9 +218,11 @@ def main():
     run = True
     iddfs = 'IDDFS' == algorithm
     bfs = 'BFS' == algorithm
-    a_star = 'A*' == algorithm
-    idgreedy = 'IDGreedy' == algorithm
     greedy = 'Greedy' == algorithm
+    a_star_sum_distance = 'A_STAR_SUM_DISTANCE' == algorithm
+    a_star_max_distance = 'A_STAR_MAX_DISTANCE' == algorithm
+    a_star_knights = 'A_STAR_KNIGHTS' == algorithm
+    a_star_combined = 'A_STAR_COMBINED' == algorithm
 
     move_count = 0
     n_moves = 0
@@ -232,18 +239,31 @@ def main():
         n_moves = len(moves[1])
         GAME.set_board(Board(level).board)
         bfs = False
-      elif a_star:
-        pass
-      elif idgreedy:
-        moves = GAME.idgreedy()
-        n_moves = len(moves[1])
-        GAME.set_board(Board(level).board)
-        idgreedy = False
       elif greedy:
         moves = GAME.greedy()
         n_moves = len(moves[1])
         GAME.set_board(Board(level).board)
         greedy = False
+      elif a_star_sum_distance:
+        moves = GAME.a_star_sum_distance()
+        n_moves = len(moves[1])
+        GAME.set_board(Board(level).board)
+        a_star_sum_distance = False
+      elif a_star_max_distance:
+        moves = GAME.a_star_max_distance()
+        n_moves = len(moves[1])
+        GAME.set_board(Board(level).board)
+        a_star_max_distance = False
+      elif a_star_knights:
+        moves = GAME.a_star_knights_not_in_position()
+        n_moves = len(moves[1])
+        GAME.set_board(Board(level).board)
+        a_star_knights = False
+      elif a_star_combined:
+        moves = GAME.a_star_combined_heuristic()
+        n_moves = len(moves[1])
+        GAME.set_board(Board(level).board)
+        a_star_combined = False
       
       for event in pygame.event.get():
         if event.type == pygame.QUIT:

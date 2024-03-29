@@ -1,5 +1,6 @@
 import pygame
 import copy
+import heapq
 from collections import deque
 from macros import *
 
@@ -111,17 +112,13 @@ class Game:
     else:
       return False
     
-    if board[new_y][new_x] in [0, WB, BB]:
+    cell_value = board[new_y][new_x]
+    if cell_value in [0, WB, BB, WK, BK]:
       return False
-    elif board[new_y][new_x] in [WW, BW]:
-      if self.move_white_knight(new_x, new_y, direction):
-        self.set_board(self.change_king_board(x, y, new_x, new_y))
-        return 2
-      return False
-    elif board[new_y][new_x] in [WK, BK]:
+    elif cell_value in [WW, BW] and not self.move_white_knight(new_x, new_y, direction):
       return False
     self.set_board(self.change_king_board(x, y, new_x, new_y))
-    return True
+    return KNIGHT_TAKEN if cell_value in [WW, BW] else True
 
   def undo_move(self, move):
     x, y, direction, knight_moved = move
@@ -210,15 +207,13 @@ class Game:
           win.blit(K_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
 
   def dfs(self, max_depth, depth, path):
-    king = self.king
     if depth >= max_depth:
       return []
-    moves = [['right', 1, 0], ['up', 0, -1], ['left', -1, 0], ['down', 0, 1]]
-    for [direction, x, y] in moves:
-      new_x, new_y = king[0] + x, king[1] + y
+    for [direction, x, y] in MOVES:
+      new_x, new_y = self.king[0] + x, self.king[1] + y
       value = self.move(direction)
-      if value or value == 2:
-        path.append((new_x, new_y, direction, value == 2))
+      if value or value == KNIGHT_TAKEN:
+        path.append((new_x, new_y, direction, value == KNIGHT_TAKEN))
         if self.check_win():
           return ["WIN", path]
         tail = self.dfs(max_depth, depth + 1, path)
@@ -240,79 +235,47 @@ class Game:
     return result
 
   def bfs(self):
-    directions = {'right': (1, 0), 'up': (0, -1), 'left': (-1, 0), 'down': (0, 1)}
-    queue = deque([(copy.deepcopy(self.board), move, []) for move in directions.keys()])
+    queue = deque([(copy.deepcopy(self.board), [])])
+    visited = set()
     while queue:
-      board, direction, path = queue.popleft()
+      board, path = queue.popleft()
+      board_tuple = tuple(map(tuple, board))
+      if board_tuple in visited:
+          continue
+      visited.add(board_tuple)
       self.set_board(board)
       self.set_positions()
-      dx, dy = directions[direction]
-      new_king = (self.king[0] + dx, self.king[1] + dy)
-      value = self.move(direction)
-      if value or value == 2:
-        tail = (new_king[0], new_king[1], direction, value == 2)
-        if self.check_win():
-          return ["WIN", path + [tail]]
-        queue.extend((copy.deepcopy(self.board), new_move, path + [tail]) for new_move in directions.keys())
-        self.undo_move(tail)
+      for [direction, x, y] in MOVES:
+        new_x, new_y = self.king[0] + x, self.king[1] + y
+        value = self.move(direction)
+        if value or value == KNIGHT_TAKEN:
+          tail = (new_x, new_y, direction, value == KNIGHT_TAKEN)
+          if self.check_win():
+            return ["WIN", path + [tail]]
+          queue.append((copy.deepcopy(self.board), path + [tail]))
+          self.undo_move(tail)
     return []
 
-  def greedy_rec(self, max_depth, depth, path):
-    king = self.king
-    white_knights = self.white_knights
-    take_positions = self.get_take_positions()
-    if depth >= max_depth:
-      return []
-    moves = [['right', 1, 0], ['up', 0, -1], ['left', -1, 0], ['down', 0, 1]]
-    for [direction, x, y] in moves:
-      new_x, new_y = king[0] + x, king[1] + y
-      value = self.move(direction)
-      if value or value == 2:
-        path.append((new_x, new_y, direction, value == 2))
-        if self.check_win():
-          return ["WIN", path]
-        take_positions = self.get_take_positions()
-        white_knights = self.white_knights
-        distances = []
-        for white_knight in white_knights:
-          distances.append(min([abs(white_knight[0] - pos[0]) + abs(white_knight[1] - pos[1]) for pos in take_positions[white_knights.index(white_knight)]], default=0))
-        if sum(distances) == 0:
-          return ["WIN", path]
-        tail = self.greedy_rec(max_depth, depth + 1, path)
-        if len(tail) == 0:
-          if len(path) != 0:
-            self.undo_move(path.pop())
-        elif tail[0] == "WIN":
-          return tail
-        else:
-          path = tail
-    return []
-
-  def idgreedy(self):
-    depth = 0
-    result = []
-    while len(result) == 0:
-      result = self.greedy_rec(depth, 0, [])
-      depth += 1
-    return result
-  
   def greedy(self):
     path = []
-    queue = deque()
-    queue.append((0, copy.deepcopy(self.board), path))
+    queue = []
+    heapq.heappush(queue, (0, copy.deepcopy(self.board), path))
+    visited = set()
     while queue:
-      _, board, path = queue.popleft()
+      _, board, path = heapq.heappop(queue)
+      board_tuple = tuple(map(tuple, board))
+      if board_tuple in visited:
+        continue
+      visited.add(board_tuple)
       self.set_board(board)
       self.set_positions()
-      king = self.king
       take_positions = self.get_take_positions()
-      moves = [['right', 1, 0], ['up', 0, -1], ['left', -1, 0], ['down', 0, 1]]
-      for [direction, x, y] in moves:
-        new_x, new_y = king[0] + x, king[1] + y
+      for [direction, x, y] in MOVES:
+        new_x, new_y = self.king[0] + x, self.king[1] + y
         value = self.move(direction)
-        if value or value == 2:
+        if value or value == KNIGHT_TAKEN:
           white_knights = self.white_knights
-          tail = (new_x, new_y, direction, value == 2)
+          tail = (new_x, new_y, direction, value == KNIGHT_TAKEN)
           new_path = path + [tail]
           if self.check_win():
             return ["WIN", new_path]
@@ -321,6 +284,143 @@ class Game:
             distances.append(min([abs(white_knight[0] - pos[0]) + abs(white_knight[1] - pos[1]) for pos in take_positions[white_knights.index(white_knight)]], default=0))
           if sum(distances) == 0:
             return ["WIN", new_path]
-          queue.append((sum(distances), copy.deepcopy(self.board), new_path))
+          heapq.heappush(queue, (sum(distances), copy.deepcopy(self.board), new_path))
+          self.undo_move(tail)
+    return []
+  
+  def heuristic_sum_distances(self):
+    distances = []
+    for white_knight in self.white_knights:
+      distances.append(min([abs(white_knight[0] - pos[0]) + abs(white_knight[1] - pos[1]) for pos in self.get_take_positions()[self.white_knights.index(white_knight)]], default=0))
+    return sum(distances)
+
+  def a_star_sum_distance(self):
+    path = []
+    queue = []
+    visited = set()
+    heapq.heappush(queue, (0, self.board, path))
+    while queue:
+      cost, board, path = heapq.heappop(queue)
+      board_tuple = tuple(map(tuple, board))
+      if board_tuple in visited:
+        continue
+      visited.add(board_tuple)
+      self.set_board(board)
+      self.set_positions()
+      take_positions = self.get_take_positions()
+      for [direction, x, y] in MOVES:
+        new_x, new_y = self.king[0] + x, self.king[1] + y
+        value = self.move(direction)
+        if value or value == KNIGHT_TAKEN:
+          tail = (new_x, new_y, direction, value == KNIGHT_TAKEN)
+          new_path = path + [tail]
+          if self.check_win():
+            return ["WIN", new_path]
+          heuristic = self.heuristic_sum_distances()
+          heapq.heappush(queue, (heuristic + cost + 1, copy.deepcopy(self.board), new_path))
+          self.undo_move(tail)
+    return []
+  
+  def heuristic_max_distance(self):
+    distances = []
+    for white_knight in self.white_knights:
+      distances.append(min([abs(white_knight[0] - pos[0]) + abs(white_knight[1] - pos[1]) for pos in self.get_take_positions()[self.white_knights.index(white_knight)]], default=0))
+    return max(distances) if distances else 0
+  
+  def a_star_max_distance(self):
+    path = []
+    queue = []
+    heapq.heappush(queue, (0, copy.deepcopy(self.board), path))
+    visited = set()
+    while queue:
+      _, board, path = heapq.heappop(queue)
+      board_tuple = tuple(map(tuple, board))
+      if board_tuple in visited:
+        continue
+      visited.add(board_tuple)
+      self.set_board(board)
+      self.set_positions()
+      for [direction, x, y] in MOVES:
+        new_x, new_y = self.king[0] + x, self.king[1] + y
+        value = self.move(direction)
+        if value or value == KNIGHT_TAKEN:
+          tail = (new_x, new_y, direction, value == KNIGHT_TAKEN)
+          new_path = path + [tail]
+          if self.check_win():
+            return ["WIN", new_path]
+          heuristic = self.heuristic_max_distance()
+          heapq.heappush(queue, (len(new_path) + heuristic, copy.deepcopy(self.board), new_path))
+          self.undo_move(tail)
+    return []
+  
+  def heuristic_knights_not_in_position(self):
+    count = 0
+    for white_knight in self.white_knights:
+      if white_knight not in self.get_take_positions()[self.white_knights.index(white_knight)]:
+        count += 1
+    return count
+
+  def a_star_knights_not_in_position(self):
+    path = []
+    queue = []
+    heapq.heappush(queue, (0, copy.deepcopy(self.board), path))
+    visited = set()
+    while queue:
+      _, board, path = heapq.heappop(queue)
+      board_tuple = tuple(map(tuple, board))
+      if board_tuple in visited:
+        continue
+      visited.add(board_tuple)
+      self.set_board(board)
+      self.set_positions()
+      for [direction, x, y] in MOVES:
+        new_x, new_y = self.king[0] + x, self.king[1] + y
+        value = self.move(direction)
+        if value or value == KNIGHT_TAKEN:
+          tail = (new_x, new_y, direction, value == KNIGHT_TAKEN)
+          new_path = path + [tail]
+          if self.check_win():
+            return ["WIN", new_path]
+          heuristic = self.heuristic_knights_not_in_position()
+          heapq.heappush(queue, (len(new_path) + heuristic, copy.deepcopy(self.board), new_path))
+          self.undo_move(tail)
+    return []
+  
+  def combined_heuristic(self):
+    weight1 = 1.0
+    weight2 = 1.0
+    weight3 = 1.0
+
+    heuristic1 = self.heuristic_sum_distances()
+    heuristic2 = self.heuristic_max_distance()
+    heuristic3 = self.heuristic_knights_not_in_position()
+
+    combined_heuristic = weight1 * heuristic1 + weight2 * heuristic2 + weight3 * heuristic3
+
+    return combined_heuristic
+  
+  def a_star_combined_heuristic(self):
+    path = []
+    queue = []
+    heapq.heappush(queue, (0, copy.deepcopy(self.board), path))
+    visited = set()
+    while queue:
+      _, board, path = heapq.heappop(queue)
+      board_tuple = tuple(map(tuple, board))
+      if board_tuple in visited:
+        continue
+      visited.add(board_tuple)
+      self.set_board(board)
+      self.set_positions()
+      for [direction, x, y] in MOVES:
+        new_x, new_y = self.king[0] + x, self.king[1] + y
+        value = self.move(direction)
+        if value or value == KNIGHT_TAKEN:
+          tail = (new_x, new_y, direction, value == KNIGHT_TAKEN)
+          new_path = path + [tail]
+          if self.check_win():
+            return ["WIN", new_path]
+          heuristic = self.combined_heuristic()
+          heapq.heappush(queue, (len(new_path) + heuristic, copy.deepcopy(self.board), new_path))
           self.undo_move(tail)
     return []
