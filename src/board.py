@@ -68,6 +68,18 @@ class Board:
     elif level == 6:
       return [
         [N, N, N, N, N, N, N, N, N],
+        [N, N, B, W, B, W, B, W, N],
+        [N, N, W, N, N, BW, W, BW, N],
+        [N, N, B, N, BB, W, BW, W, BB],
+        [N, N, W, N, N, B, W, B, W],
+        [BK, WW, B, W, B, W, B, W, BB],
+        [N, N, N, N, N, N, W, B, W],
+        [N, N, N, N, N, N, BB, W, B],
+        [N, N, N, N, N, N, N, N, N]
+      ]
+    elif level == 7:
+      return [
+        [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, N, N],
         [N, N, N, N, N, N, N, WB, N],
         [N, N, N, N, N, N, W, B, W],
@@ -77,7 +89,7 @@ class Board:
         [WB, B, W, B, W, B, W, BW, W],
         [N, N, N, N, N, N, N, N, N]
       ]
-    elif level == 7:
+    elif level == 8:
       return [
         [N, N, N, N, WB, B, N, N, N],
         [N, N, N, N, N, W, N, N, N],
@@ -88,6 +100,18 @@ class Board:
         [N, B, N, B, WW, BB, W, B, N],
         [N, W, N, W, B, N, N, N, N],
         [N, B, W, B, N, N, N, N, N]
+      ]
+    elif level == 9:
+      return [
+        [N, N, N, N, N, N, N, N, N],
+        [N, N, WB, B, WB, N, N, N, N],
+        [N, N, B, W, B, W, N, N, N],
+        [N, N, N, BW, W, BW, W, B, N],
+        [N, W, BW, W, B, W, N, W, N],
+        [N, B, N, N, N, B, W, B, N],
+        [N, W, B, N, N, W, N, N, N],
+        [N, BK, W, B, W, B, N, N, N],
+        [N, N, N, WB, N, N, N, N, N]
       ]
     else:
       return []

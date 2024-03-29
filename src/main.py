@@ -75,10 +75,10 @@ def draw_start_menu(win):
   
   win.blit(TITLE_IMAGE_PATH, (105, 100))
   win.blit(HUMAN_IMAGE_PATH, (50, 500))
-  win.blit(DFS_IMAGE_PATH, (460, 500))
+  win.blit(IDDFS_IMAGE_PATH, (460, 500))
   win.blit(BFS_IMAGE_PATH, (50, 600))
   win.blit(A_STAR_IMAGE_PATH, (460, 600))
-  win.blit(IDDFS_IMAGE_PATH, (50, 700))
+  win.blit(IDGREEDY_IMAGE_PATH, (50, 700))
   win.blit(GREEDY_IMAGE_PATH, (460, 700))
   pygame.display.update()
 
@@ -91,13 +91,13 @@ def draw_start_menu(win):
         if 50 <= x <= 350 and 500 <= y <= 580:
           return 'Human', ''
         elif 460 <= x <= 760 and 500 <= y <= 580:
-          return 'AI', 'DFS'
+          return 'AI', 'IDDFS'
         elif 50 <= x <= 350 and 600 <= y <= 680:
           return 'AI', 'BFS'
         elif 460 <= x <= 760 and 600 <= y <= 680:
           return 'AI', 'A*'
         elif 50 <= x <= 350 and 700 <= y <= 780:
-          return 'AI', 'IDDFS'
+          return 'AI', 'IDGreedy'
         elif 460 <= x <= 760 and 700 <= y <= 780:
           return 'AI', 'Greedy'
       elif event.type == pygame.KEYDOWN:
@@ -106,13 +106,13 @@ def draw_start_menu(win):
         elif event.key == pygame.K_1:
           return 'Human', ''
         elif event.key == pygame.K_2:
-          return 'AI', 'DFS'
+          return 'AI', 'IDDFS'
         elif event.key == pygame.K_3:
           return 'AI', 'BFS'
         elif event.key == pygame.K_4:
           return 'AI', 'A*'
         elif event.key == pygame.K_5:
-          return 'AI', 'IDDFS'
+          return 'AI', 'IDGreedy'
         elif event.key == pygame.K_6:
           return 'AI', 'Greedy'
 
@@ -184,23 +184,23 @@ def main():
   if menu_option == 1:
     player, algorithm = draw_start_menu(win)
     if player == '':
-      level = 8
+      level = 10
   elif menu_option == 2:
-    level = 8
+    level = 10
   elif menu_option == 3:
     level_option = draw_levels_menu(win)
     if level_option == 0:
-      level = 8
+      level = 10
     else:
       player, algorithm = draw_start_menu(win)
       level = level_option
       if player == '':
-        level = 8
+        level = 10
   elif menu_option == 4:
     # TODO show how to play, change what is below
     player, algorithm = 'Human', ''
 
-  while level < 8:
+  while level < 10:
     GAME.set_board(Board(level).board)
 
     if player == 'AI':
@@ -211,9 +211,10 @@ def main():
       display_textRect = SPACE_TEXT_RECT
     
     run = True
-    dfs = 'DFS' == algorithm
-    bfs = 'BFS' == algorithm
     iddfs = 'IDDFS' == algorithm
+    bfs = 'BFS' == algorithm
+    a_star = 'A*' == algorithm
+    idgreedy = 'IDGreedy' == algorithm
     greedy = 'Greedy' == algorithm
 
     move_count = 0
@@ -221,23 +222,25 @@ def main():
     moves = []
 
     while run:
-      if dfs:
-        moves = GAME.dfs(MAX_DEPTH[level - 1], 0, [])
+      if iddfs:
+        moves = GAME.iddfs()
         n_moves = len(moves[1])
         GAME.set_board(Board(level).board)
-        dfs = False
+        iddfs = False
       elif bfs:
         moves = GAME.bfs()
         n_moves = len(moves[1])
         GAME.set_board(Board(level).board)
         bfs = False
-      elif iddfs:
-        moves = GAME.iddfs(MAX_DEPTH[level - 1] + 1)
+      elif a_star:
+        pass
+      elif idgreedy:
+        moves = GAME.idgreedy()
         n_moves = len(moves[1])
         GAME.set_board(Board(level).board)
-        iddfs = False
+        idgreedy = False
       elif greedy:
-        moves = GAME.greedy(MAX_DEPTH[level - 1], 0, [])
+        moves = GAME.greedy()
         n_moves = len(moves[1])
         GAME.set_board(Board(level).board)
         greedy = False
@@ -267,7 +270,7 @@ def main():
                 display_textRect = LOSE_TEXT_RECT
             elif event.key == pygame.K_q:
               run = False
-              level = 8
+              level = 10
               break
             if direction != '':
               GAME.move(direction)
@@ -283,7 +286,7 @@ def main():
                 break
             elif event.key == pygame.K_q:
               run = False
-              level = 8
+              level = 10
               break
             
       GAME.draw(win)

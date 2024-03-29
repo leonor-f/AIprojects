@@ -44,6 +44,21 @@ class Game:
           pass
     return positions
   
+  def get_take_positions(self):
+    board = self.board
+    black_knights = self.black_knights
+    take_positions = []
+    for black_knight in black_knights:
+      x, y = black_knight[:2]
+      take_positions_knight = [[x + 2, y + 1], [x + 1, y + 2], [x - 1, y + 2], [x - 2, y + 1], [x - 2, y - 1], [x - 1, y - 2], [x + 1, y - 2], [x + 2, y - 1]]
+      valid_take_positions_knight = []
+      for pos in take_positions_knight:
+        new_x, new_y = pos
+        if 0 <= new_x < 9 and 0 <= new_y < 9 and board[new_y][new_x] not in [N, WB, BB]:
+          valid_take_positions_knight.append(pos)
+      take_positions.append(valid_take_positions_knight)
+    return take_positions
+  
   def change_white_knight_board(self, new_x, new_y, x, y):
     board = self.board
     if board[new_y][new_x] == WW:
@@ -216,15 +231,16 @@ class Game:
           path = tail
     return []
   
-  def iddfs(self, max_depth):
-    for depth in range(max_depth):
+  def iddfs(self):
+    depth = 0
+    result = []
+    while len(result) == 0:
       result = self.dfs(depth, 0, [])
-      if len(result) > 0 and result[0] == "WIN":
-        return result
-    return []
+      depth += 1
+    return result
 
   def bfs(self):
-    directions = {'right': (1, 0), 'left': (-1, 0), 'down': (0, 1), 'up': (0, -1)}
+    directions = {'right': (1, 0), 'up': (0, -1), 'left': (-1, 0), 'down': (0, 1)}
     queue = deque([(copy.deepcopy(self.board), move, []) for move in directions.keys()])
     while queue:
       board, direction, path = queue.popleft()
@@ -241,25 +257,10 @@ class Game:
         self.undo_move(tail)
     return []
 
-  def get_take_positions(self, black_knights):
-    board = self.board
-    take_positions = []
-    for black_knight in black_knights:
-      x, y = black_knight[:2]
-      take_positions_knight = [[x + 2, y + 1], [x + 1, y + 2], [x - 1, y + 2], [x - 2, y + 1], [x - 2, y - 1], [x - 1, y - 2], [x + 1, y - 2], [x + 2, y - 1]]
-      valid_take_positions_knight = []
-      for pos in take_positions_knight:
-        new_x, new_y = pos
-        if 0 <= new_x < 9 and 0 <= new_y < 9 and board[new_y][new_x] not in [N, WB, BB]:
-          valid_take_positions_knight.append(pos)
-      take_positions.append(valid_take_positions_knight)
-    return take_positions
-
-  def greedy(self, max_depth, depth, path):
+  def greedy_rec(self, max_depth, depth, path):
     king = self.king
     white_knights = self.white_knights
-    black_knights = self.black_knights
-    take_positions = self.get_take_positions(black_knights)
+    take_positions = self.get_take_positions()
     if depth >= max_depth:
       return []
     moves = [['right', 1, 0], ['up', 0, -1], ['left', -1, 0], ['down', 0, 1]]
@@ -270,14 +271,14 @@ class Game:
         path.append((new_x, new_y, direction, value == 2))
         if self.check_win():
           return ["WIN", path]
-        take_positions = self.get_take_positions(black_knights)
+        take_positions = self.get_take_positions()
         white_knights = self.white_knights
         distances = []
         for white_knight in white_knights:
           distances.append(min([abs(white_knight[0] - pos[0]) + abs(white_knight[1] - pos[1]) for pos in take_positions[white_knights.index(white_knight)]], default=0))
         if sum(distances) == 0:
           return ["WIN", path]
-        tail = self.greedy(max_depth, depth + 1, path)
+        tail = self.greedy_rec(max_depth, depth + 1, path)
         if len(tail) == 0:
           if len(path) != 0:
             self.undo_move(path.pop())
@@ -285,4 +286,41 @@ class Game:
           return tail
         else:
           path = tail
+    return []
+
+  def idgreedy(self):
+    depth = 0
+    result = []
+    while len(result) == 0:
+      result = self.greedy_rec(depth, 0, [])
+      depth += 1
+    return result
+  
+  def greedy(self):
+    path = []
+    queue = deque()
+    queue.append((0, copy.deepcopy(self.board), path))
+    while queue:
+      _, board, path = queue.popleft()
+      self.set_board(board)
+      self.set_positions()
+      king = self.king
+      take_positions = self.get_take_positions()
+      moves = [['right', 1, 0], ['up', 0, -1], ['left', -1, 0], ['down', 0, 1]]
+      for [direction, x, y] in moves:
+        new_x, new_y = king[0] + x, king[1] + y
+        value = self.move(direction)
+        if value or value == 2:
+          white_knights = self.white_knights
+          tail = (new_x, new_y, direction, value == 2)
+          new_path = path + [tail]
+          if self.check_win():
+            return ["WIN", new_path]
+          distances = []
+          for white_knight in white_knights:
+            distances.append(min([abs(white_knight[0] - pos[0]) + abs(white_knight[1] - pos[1]) for pos in take_positions[white_knights.index(white_knight)]], default=0))
+          if sum(distances) == 0:
+            return ["WIN", new_path]
+          queue.append((sum(distances), copy.deepcopy(self.board), new_path))
+          self.undo_move(tail)
     return []
