@@ -37,6 +37,8 @@ A_STAR_MAX_DISTANCE_IMAGE_PATH = pygame.image.load("../img/buttons/a_star_max_di
 A_STAR_KNIGHTS_NOT_IN_POSITION_IMAGE_PATH = pygame.image.load("../img/buttons/a_star_knights_not_in_position.png")
 A_STAR_COMBINED_IMAGE_PATH = pygame.image.load("../img/buttons/a_star_combined.png")
 GREEDY_IMAGE_PATH = pygame.image.load("../img/buttons/greedy.png")
+WON_IMAGE_PATH = pygame.image.load("../img/buttons/won.png")
+LOST_IMAGE_PATH = pygame.image.load("../img/buttons/lost.png")
 # LEVELS
 LEVEL_ONE_IMAGE_PATH = pygame.image.load("../img/levels/level_one.png")
 LEVEL_TWO_IMAGE_PATH = pygame.image.load("../img/levels/level_two.png")

@@ -194,23 +194,6 @@ def main():
 
   win = pygame.display.set_mode((WIDTH, HEIGHT))
 
-  FONT = pygame.font.Font(None, 40)
-
-  SPACE_TEXT = FONT.render("Press SPACE to finish", True, (255, 255, 255))
-  WIN_TEXT = FONT.render("You win!", True, (0, 255, 0))
-  LOSE_TEXT = FONT.render("You lose!", True, (255, 0, 0))
-  AI_TEXT = FONT.render("Press N to continue", True, (255, 255, 255))
-
-  SPACE_TEXT_RECT = SPACE_TEXT.get_rect()
-  WIN_TEXT_RECT = WIN_TEXT.get_rect()
-  LOSE_TEXT_RECT = LOSE_TEXT.get_rect()
-  AI_TEXT_RECT = AI_TEXT.get_rect()
-  
-  SPACE_TEXT_RECT.center = (WIDTH // 2, 20)
-  WIN_TEXT_RECT.center = (WIDTH // 2, 20)
-  LOSE_TEXT_RECT.center = (WIDTH // 2, 20)
-  AI_TEXT_RECT.center = (WIDTH // 2, 20)
-
   # GAME INITIALIZATION
   level = 1
   GAME = Game(Board(level).board)
@@ -239,16 +222,12 @@ def main():
     elif menu_option == 4:
       level = 10
       menu = False
+    
+  WON_LOST_IMAGE_PATH = ''
+  won_lost = False
 
   while level < 10:
     GAME.set_board(Board(level).board)
-
-    if player == 'AI':
-      display_text = AI_TEXT
-      display_textRect = AI_TEXT_RECT
-    else:
-      display_text = SPACE_TEXT
-      display_textRect = SPACE_TEXT_RECT
     
     run = True
     iddfs = 'IDDFS' == algorithm
@@ -317,12 +296,11 @@ def main():
             elif event.key == pygame.K_SPACE:
               run = False
               if GAME.check_win():
-                display_text = WIN_TEXT
-                display_textRect = WIN_TEXT_RECT
+                WON_LOST_IMAGE_PATH = WON_IMAGE_PATH
                 level += 1
               else:
-                display_text = LOSE_TEXT
-                display_textRect = LOSE_TEXT_RECT
+                WON_LOST_IMAGE_PATH = LOST_IMAGE_PATH
+              won_lost = True
             elif event.key == pygame.K_q:
               run = False
               level = 10
@@ -334,8 +312,8 @@ def main():
               GAME.move(moves[1][move_count][2])
               move_count += 1
               if move_count == n_moves:
-                display_text = WIN_TEXT
-                display_textRect = WIN_TEXT_RECT
+                won_lost = True
+                WON_LOST_IMAGE_PATH = WON_IMAGE_PATH
                 level += 1
                 run = False
                 break
@@ -346,14 +324,14 @@ def main():
             
       GAME.draw(win)
       
-      pygame.draw.rect(win, (0, 0, 0), display_textRect)
-      win.blit(display_text, display_textRect)
-
       pygame.display.update()
 
-      if display_text in [WIN_TEXT, LOSE_TEXT]:
+      if won_lost:
+        win.blit(WON_LOST_IMAGE_PATH, (105, 0))
+        pygame.display.update()
         sleep(0.5)
-
+        won_lost = False
+  
   sleep(0.5)
 
   pygame.quit()
