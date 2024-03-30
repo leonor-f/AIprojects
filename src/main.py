@@ -194,6 +194,9 @@ def main():
 
   win = pygame.display.set_mode((WIDTH, HEIGHT))
 
+  font_moves = pygame.font.Font('../font/agency_fb_bold_condensed.otf', 36)
+  font_score = pygame.font.Font('../font/agency_fb_bold_condensed.otf', 48)
+
   # GAME INITIALIZATION
   level = 1
   GAME = Game(Board(level).board)
@@ -229,6 +232,7 @@ def main():
   while level < 11:
     GAME.set_board(Board(level).board)
     
+    moves_made = 0
     run = True
     iddfs = 'IDDFS' == algorithm
     bfs = 'BFS' == algorithm
@@ -293,19 +297,23 @@ def main():
               direction = 'down'
             elif event.key == pygame.K_d:
               direction = 'right'
+            elif event.key == pygame.K_r:
+              GAME.set_board(Board(level).board)
+              moves_made = 0
             elif event.key == pygame.K_h:
               if GAME.check_win():
                 win.blit(NO_MOVES_NEEDED_IMAGE_PATH, (105, 0))
               else:
                 move = GAME.hint()
-                if move == 'up':
-                  win.blit(ARROW_UP_IMAGE_PATH, (-250, 0))
-                elif move == 'down':
-                  win.blit(ARROW_DOWN_IMAGE_PATH, (-250, 0))
-                elif move == 'right':
-                  win.blit(ARROW_RIGHT_IMAGE_PATH, (-250, 0))
-                elif move == 'left':
-                  win.blit(ARROW_LEFT_IMAGE_PATH, (-250, 0))
+                arrow_images = {
+                  'up': ARROW_UP_IMAGE_PATH,
+                  'down': ARROW_DOWN_IMAGE_PATH,
+                  'right': ARROW_RIGHT_IMAGE_PATH,
+                  'left': ARROW_LEFT_IMAGE_PATH
+                }
+                if move in arrow_images:
+                  win.blit(arrow_images[move], (-250, 0))
+                  moves_made += 1
                 else:
                   win.blit(CANT_WIN_FROM_HERE_IMAGE_PATH, (105, 0))
               pygame.display.update()
@@ -323,7 +331,9 @@ def main():
               level = 11
               break
             if direction != '':
-              GAME.move(direction)
+              move_bool = GAME.move(direction)
+              if move_bool or move_bool == KNIGHT_TAKEN:
+                moves_made += 1
           else:
             if event.key == pygame.K_n and move_count < n_moves:
               GAME.move(moves[1][move_count][2])
@@ -340,13 +350,24 @@ def main():
               break
             
       GAME.draw(win)
+
+      if player == 'Human':
+        moves_text = font_moves.render(f'Moves: {moves_made}', True, (255, 255, 255))
+        win.blit(moves_text, (700, 750))
       
       pygame.display.update()
 
       if won_lost:
-        win.blit(WON_LOST_IMAGE_PATH, (105, 0))
+        if player == 'AI':
+          sleep(0.2)
+        win.fill((112, 113, 160))
+        win.blit(WON_LOST_IMAGE_PATH, (105, 350))
+        if WON_LOST_IMAGE_PATH == WON_IMAGE_PATH and player == 'Human':
+          score_text = font_score.render(f'Score: {MAX_SCORE - moves_made}', True, (255, 255, 255))
+          score_rect = score_text.get_rect(center=(WIDTH/2, 500))
+          win.blit(score_text, score_rect)
         pygame.display.update()
-        sleep(0.5)
+        sleep(0.7)
         won_lost = False
   
   sleep(0.5)
