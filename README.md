@@ -39,6 +39,14 @@ cd src
 python .\main.py
 ```
 
+### Menus
+
+| Main Menu | Rules Menu | Levels Menu | Methods Menu |
+| ---------------- | --------- | ------------------ | -----|
+| In this menu we can choose if we want to **Start** the game, choose its **Levels**, go to the **Rules** or **Exit** the game. | In this menu we are presented with the **Rules** of the game. | In this menu we can choose what **level** we want to play to, after, choose which **method** we want to use to play it. | In this menu we can choose how we want to play the game. It can either be us playing or the machine playing for us. |
+| ![MainMenu](img/menus/main_menu.jpg) | ![RulesMenu](img/menus/rules.jpg) | ![LevelsMenu](img/menus/levels.jpg) | ![Methods](img/menus/methods.jpg) |
+
+
 ### References
 - https://store.steampowered.com/app/1784220/Chesskoban__Chess_Puzzles/
 - https://www.sokobanonline.com/help/how-to-play
