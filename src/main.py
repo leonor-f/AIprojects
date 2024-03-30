@@ -299,13 +299,13 @@ def main():
               else:
                 move = GAME.hint()
                 if move == 'up':
-                  win.blit(ARROW_UP_IMAGE_PATH, (105, 0))
+                  win.blit(ARROW_UP_IMAGE_PATH, (-250, 0))
                 elif move == 'down':
-                  win.blit(ARROW_DOWN_IMAGE_PATH, (105, 0))
+                  win.blit(ARROW_DOWN_IMAGE_PATH, (-250, 0))
                 elif move == 'right':
-                  win.blit(ARROW_RIGHT_IMAGE_PATH, (105, 0))
+                  win.blit(ARROW_RIGHT_IMAGE_PATH, (-250, 0))
                 elif move == 'left':
-                  win.blit(ARROW_LEFT_IMAGE_PATH, (105, 0))
+                  win.blit(ARROW_LEFT_IMAGE_PATH, (-250, 0))
                 else:
                   win.blit(CANT_WIN_FROM_HERE_IMAGE_PATH, (105, 0))
               pygame.display.update()
