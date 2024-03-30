@@ -206,7 +206,7 @@ def main():
       if menu_option == 2:
         level_option = draw_levels_menu(win)
         if level_option == 0:
-          level = 10
+          level = 11
           menu = False
           continue
         elif level_option == 11:
@@ -217,16 +217,16 @@ def main():
       menu = False
     elif menu_option == 3:
       if draw_rules_menu(win) == 0:
-        level = 10
+        level = 11
         menu = False
     elif menu_option == 4:
-      level = 10
+      level = 11
       menu = False
     
   WON_LOST_IMAGE_PATH = ''
   won_lost = False
 
-  while level < 10:
+  while level < 11:
     GAME.set_board(Board(level).board)
     
     run = True
@@ -306,7 +306,7 @@ def main():
               won_lost = True
             elif event.key == pygame.K_q:
               run = False
-              level = 10
+              level = 11
               break
             if direction != '':
               GAME.move(direction)
@@ -322,7 +322,7 @@ def main():
                 break
             elif event.key == pygame.K_q:
               run = False
-              level = 10
+              level = 11
               break
             
       GAME.draw(win)

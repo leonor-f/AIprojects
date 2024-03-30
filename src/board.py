@@ -101,5 +101,29 @@ class Board:
         [B, W, B, W, B, N, N, N, N],
         [N, N, N, N, W, N, N, N, N]
       ]
+    elif level == 9:
+      return [
+        [N, BB, N, N, N, N, N, N, N],
+        [N, W, N, N, N, WB, B, WB, N],
+        [W, B, N, N, N, BW, N, N, N],
+        [B, W, B, W, B, WW, B, WB, N],
+        [W, B, W, B, N, B, W, B, W],
+        [N, WW, N, W, BW, W, B, N, N],
+        [WB, B, N, N, W, BW, N, N, N],
+        [N, WK, N, N, BW, W, BB, N, N],
+        [N, B, W, B, W, N, N, N, N]
+      ]
+    elif level == 10:
+      return [
+        [N, N, N, N, N, N, BB, WB, N],
+        [N, N, N, B, W, B, WB, N, N],
+        [N, N, N, W, B, W, B, WB, N],
+        [WB, N, N, BW, WW, BW, W, B, W],
+        [N, N, B, W, BK, WW, BW, N, B],
+        [N, N, W, N, N, N, W, B, W],
+        [N, N, B, W, N, N, BW, N, BB],
+        [N, N, W, B, W, B, W, N, N],
+        [N, N, N, W, N, N, N, N, N]
+      ]
     else:
       return []
