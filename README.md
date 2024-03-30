@@ -27,7 +27,7 @@ The goal is to **reposition the white knights, pushing them with the King** in o
 
 ### Usage
 - #### Setup
-The game was developed using Python 3.12, however it can be played in every version of **python3**. We also used **Pygame** to display the game. So it is necessary to install its package to run the application. To do that, simply run the command:
+The game was developed using Python 3.12, however it can be played in every version of **python3**. We also used **Pygame** to display the game, more specifically `pygame 2.5.2`. So it is necessary to install its package to run the application. To do that, simply run the command:
 ```
 pip install pygame
 ```
