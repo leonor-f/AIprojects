@@ -4,6 +4,27 @@ from board import Board
 from game import Game
 from macros import *
 
+def draw_rules_menu(win):
+  win.fill((112, 113, 160))
+  
+  win.blit(RULES_PAGE_IMAGE_PATH, (0, 0))
+  win.blit(BACK_IMAGE_PATH, (255, 700))
+  pygame.display.update()
+
+  while True:
+    for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        return 0
+      if event.type == pygame.MOUSEBUTTONDOWN:
+        x, y = pygame.mouse.get_pos()
+        if 255 <= x <= 555 and 700 <= y <= 780:
+          return 1
+      if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_q:
+          return 0
+        elif event.key == pygame.K_b:
+          return 1
+
 def draw_levels_menu(win):
   win.fill((112, 113, 160))
   
@@ -13,11 +34,12 @@ def draw_levels_menu(win):
   win.blit(LEVEL_THREE_IMAGE_PATH, (364, 400))
   win.blit(LEVEL_FOUR_IMAGE_PATH, (512, 400))
   win.blit(LEVEL_FIVE_IMAGE_PATH, (660, 400))
-  win.blit(LEVEL_SIX_IMAGE_PATH, (68, 600))
-  win.blit(LEVEL_SEVEN_IMAGE_PATH, (216, 600))
-  win.blit(LEVEL_EIGHT_IMAGE_PATH, (364, 600))
-  win.blit(LEVEL_NINE_IMAGE_PATH, (512, 600))
-  win.blit(LEVEL_TEN_IMAGE_PATH, (660, 600))
+  win.blit(LEVEL_SIX_IMAGE_PATH, (68, 550))
+  win.blit(LEVEL_SEVEN_IMAGE_PATH, (216, 550))
+  win.blit(LEVEL_EIGHT_IMAGE_PATH, (364, 550))
+  win.blit(LEVEL_NINE_IMAGE_PATH, (512, 550))
+  win.blit(LEVEL_ZERO_IMAGE_PATH, (660, 550))
+  win.blit(BACK_IMAGE_PATH, (255, 700))
   pygame.display.update()
 
   while True:
@@ -36,16 +58,18 @@ def draw_levels_menu(win):
           return 4
         elif 660 <= x <= 740 and 400 <= y <= 480:
           return 5
-        elif 68 <= x <= 148 and 600 <= y <= 680:
+        elif 68 <= x <= 148 and 550 <= y <= 630:
           return 6
-        elif 216 <= x <= 296 and 600 <= y <= 680:
+        elif 216 <= x <= 296 and 550 <= y <= 630:
           return 7
-        elif 364 <= x <= 444 and 600 <= y <= 680:
+        elif 364 <= x <= 444 and 550 <= y <= 630:
           return 8
-        elif 512 <= x <= 592 and 600 <= y <= 680:
+        elif 512 <= x <= 592 and 550 <= y <= 630:
           return 9
-        elif 660 <= x <= 740 and 600 <= y <= 680:
+        elif 660 <= x <= 740 and 550 <= y <= 630:
           return 10
+        elif 255 <= x <= 555 and 700 <= y <= 780:
+          return 11
       elif event.type == pygame.KEYDOWN:
         if event.key == pygame.K_q:
           return 0
@@ -69,6 +93,8 @@ def draw_levels_menu(win):
           return 9
         elif event.key == pygame.K_0:
           return 10
+        elif event.key == pygame.K_b:
+          return 11
 
 def draw_start_menu(win):
   win.fill((112, 113, 160))
@@ -101,7 +127,7 @@ def draw_start_menu(win):
         elif 50 <= x <= 350 and 600 <= y <= 680:
           return 'AI', 'A_STAR_MAX_DISTANCE'
         elif 460 <= x <= 760 and 600 <= y <= 680:
-          return 'AI', 'A_START_KNIGHTS'
+          return 'AI', 'A_STAR_KNIGHTS'
         elif 50 <= x <= 350 and 700 <= y <= 780:
           return 'AI', 'A_STAR_COMBINED'
         elif 460 <= x <= 760 and 700 <= y <= 780:
@@ -132,7 +158,7 @@ def draw_menu(win):
   win.blit(TITLE_IMAGE_PATH, (105, 100))
   win.blit(START_IMAGE_PATH, (50, 500))
   win.blit(LEVELS_IMAGE_PATH, (460, 500))
-  win.blit(CONFIG_IMAGE_PATH, (50, 600))
+  win.blit(RULES_IMAGE_PATH, (50, 600))
   win.blit(EXIT_IMAGE_PATH, (460, 600))
   pygame.display.update()
 
@@ -188,27 +214,31 @@ def main():
   # GAME INITIALIZATION
   level = 1
   GAME = Game(Board(level).board)
-
-  menu_option = draw_menu(win)
   
-  if menu_option == 1:
-    player, algorithm = draw_start_menu(win)
-    if player == '':
-      level = 10
-  elif menu_option == 2:
-    level_option = draw_levels_menu(win)
-    if level_option == 0:
-      level = 10
-    else:
+  menu = True
+
+  while menu:
+    menu_option = draw_menu(win)
+    if menu_option in [1, 2]:
+      if menu_option == 2:
+        level_option = draw_levels_menu(win)
+        if level_option == 0:
+          level = 10
+          menu = False
+          continue
+        elif level_option == 11:
+          continue
+        level = level_option
       player, algorithm = draw_start_menu(win)
-      level = level_option
-      if player == '':
+      level = level if player != '' else 10
+      menu = False
+    elif menu_option == 3:
+      if draw_rules_menu(win) == 0:
         level = 10
-  elif menu_option == 3:
-    # TODO show how to play, change what is below
-    player, algorithm = 'Human', ''
-  elif menu_option == 4:
-    level = 10
+        menu = False
+    elif menu_option == 4:
+      level = 10
+      menu = False
 
   while level < 10:
     GAME.set_board(Board(level).board)
