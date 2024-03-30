@@ -427,6 +427,8 @@ class Game:
 
   def hint(self):
     current_board = copy.deepcopy(self.board)
-    moves = self.greedy()
+    moves = self.a_star_sum_distance()
     self.set_board(current_board)
-    return moves
+    if moves:
+      return moves[1][0][2]
+    return ''

@@ -39,6 +39,13 @@ A_STAR_COMBINED_IMAGE_PATH = pygame.image.load("../img/buttons/a_star_combined.p
 GREEDY_IMAGE_PATH = pygame.image.load("../img/buttons/greedy.png")
 WON_IMAGE_PATH = pygame.image.load("../img/buttons/won.png")
 LOST_IMAGE_PATH = pygame.image.load("../img/buttons/lost.png")
+ARROW_UP_IMAGE_PATH = pygame.image.load("../img/buttons/arrow_up.png")
+ARROW_DOWN_IMAGE_PATH = pygame.image.load("../img/buttons/arrow_down.png")
+ARROW_RIGHT_IMAGE_PATH = pygame.image.load("../img/buttons/arrow_right.png")
+ARROW_LEFT_IMAGE_PATH = pygame.image.load("../img/buttons/arrow_left.png")
+BULLET_IMAGE_PATH = pygame.image.load("../img/buttons/bullet.png")
+NO_MOVES_NEEDED_IMAGE_PATH = pygame.image.load("../img/buttons/no_moves_needed.png")
+CANT_WIN_FROM_HERE_IMAGE_PATH = pygame.image.load("../img/buttons/cant_win_from_here.png")
 # LEVELS
 LEVEL_ONE_IMAGE_PATH = pygame.image.load("../img/levels/level_one.png")
 LEVEL_TWO_IMAGE_PATH = pygame.image.load("../img/levels/level_two.png")

@@ -213,7 +213,7 @@ def main():
           continue
         level = level_option
       player, algorithm = draw_start_menu(win)
-      level = level if player != '' else 10
+      level = level if player != '' else 11
       menu = False
     elif menu_option == 3:
       if draw_rules_menu(win) == 0:
@@ -294,8 +294,22 @@ def main():
             elif event.key == pygame.K_d:
               direction = 'right'
             elif event.key == pygame.K_h:
-              moves = GAME.hint()
-              print(moves)
+              if GAME.check_win():
+                win.blit(NO_MOVES_NEEDED_IMAGE_PATH, (105, 0))
+              else:
+                move = GAME.hint()
+                if move == 'up':
+                  win.blit(ARROW_UP_IMAGE_PATH, (105, 0))
+                elif move == 'down':
+                  win.blit(ARROW_DOWN_IMAGE_PATH, (105, 0))
+                elif move == 'right':
+                  win.blit(ARROW_RIGHT_IMAGE_PATH, (105, 0))
+                elif move == 'left':
+                  win.blit(ARROW_LEFT_IMAGE_PATH, (105, 0))
+                else:
+                  win.blit(CANT_WIN_FROM_HERE_IMAGE_PATH, (105, 0))
+              pygame.display.update()
+              sleep(0.5)
             elif event.key == pygame.K_SPACE:
               run = False
               if GAME.check_win():
