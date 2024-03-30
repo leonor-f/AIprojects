@@ -307,7 +307,6 @@ class Game:
       visited.add(board_tuple)
       self.set_board(board)
       self.set_positions()
-      take_positions = self.get_take_positions()
       for [direction, x, y] in MOVES:
         new_x, new_y = self.king[0] + x, self.king[1] + y
         value = self.move(direction)
