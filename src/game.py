@@ -15,24 +15,30 @@ class Game:
     self.black_knights = self.positions[1]
 
   def set_board(self, board):
+    """Set the board to the given board."""
     self.board = board
     self.set_positions()
 
   def set_king(self, x, y):
+    """Set the king to the given position."""
     self.king = (x, y)
   
   def set_white_knights(self, white_knights):
+    """Set the white knights to the given positions."""
     self.white_knights = white_knights
 
   def set_positions(self):
+    """Set the positions of the white knights, black knights and the king."""
     self.positions = self.get_positions()
     self.king = self.positions[2][0]
     self.white_knights = self.positions[0]
     self.black_knights = self.positions[1]
 
   def get_positions(self):
+    """Get the positions of the white knights, black knights and the king."""
     board = self.board
-    positions = [[], [], []] # white_knights, black_knights, king
+    # Positions of the white knights, black knights and the king
+    positions = [[], [], []]
     for y in range(self.rows):
       for x in range(self.cols):
         if board[y][x] == WW or board[y][x] == BW:
@@ -46,21 +52,25 @@ class Game:
     return positions
   
   def get_take_positions(self):
+    """Get the positions that the white knights can take the black knights."""
     board = self.board
     black_knights = self.black_knights
     take_positions = []
     for black_knight in black_knights:
       x, y = black_knight[:2]
+      # Calculate the positions that a white knight can move to take this black knight
       take_positions_knight = [[x + 2, y + 1], [x + 1, y + 2], [x - 1, y + 2], [x - 2, y + 1], [x - 2, y - 1], [x - 1, y - 2], [x + 1, y - 2], [x + 2, y - 1]]
       valid_take_positions_knight = []
       for pos in take_positions_knight:
         new_x, new_y = pos
         if 0 <= new_x < 9 and 0 <= new_y < 9 and board[new_y][new_x] not in [N, WB, BB]:
           valid_take_positions_knight.append(pos)
+      # Add the list of valid take positions for this black knight to the overall list
       take_positions.append(valid_take_positions_knight)
     return take_positions
   
   def change_white_knight_board(self, new_x, new_y, x, y):
+    """Change the board when a white knight moves."""
     board = self.board
     if board[new_y][new_x] == WW:
       board[new_y][new_x] = W
@@ -69,8 +79,9 @@ class Game:
       board[new_y][new_x] = B
       board[y][x] = WW
     return board
-  
+
   def change_king_board(self, x, y, new_x, new_y):
+    """Change the board when the king moves."""
     board = self.board
     if board[y][x] == WK:
       board[y][x] = W
@@ -81,7 +92,9 @@ class Game:
     return board
   
   def move_white_knight(self, x, y, direction):
+    """Move the white knight in the given direction."""
     white_knights = self.white_knights
+    # Check if the white knight can move in the given direction
     if [x, y] in white_knights:
       if direction == 'up' and y - 1 >= 0 and self.board[y - 1][x] not in [0, WB, BB, WW, BW]:
         new_x, new_y = x, y - 1
@@ -93,12 +106,14 @@ class Game:
         new_x, new_y = x + 1, y
       else:
         return False
+      # Move the white knight
       white_knight_index = white_knights.index([x, y])
       white_knights[white_knight_index] = [new_x, new_y]
       self.set_board(self.change_white_knight_board(x, y, new_x, new_y))
       return True
   
   def move(self, direction):
+    """Move the king in the given direction."""
     x, y = self.king
     board = self.board
     if direction == 'up':
@@ -112,6 +127,7 @@ class Game:
     else:
       return False
     
+    # Check if the king can move in the given direction
     cell_value = board[new_y][new_x]
     if cell_value in [0, WB, BB, WK, BK]:
       return False
@@ -121,8 +137,10 @@ class Game:
     return KNIGHT_TAKEN if cell_value in [WW, BW] else True
 
   def undo_move(self, move):
+    """Undo the move."""
     x, y, direction, knight_moved = move
     white_knights = self.white_knights
+    # Depending on the direction, move the king in the opposite direction
     if direction == 'up':
       new_x, new_y = x % 9, (y + 1) % 9
       knight_x, knight_y = x % 9, (y - 1) % 9
@@ -137,6 +155,7 @@ class Game:
       knight_x, knight_y = (x + 1) % 9, y % 9
     self.set_board(self.change_king_board(x, y, new_x, new_y))
     self.set_king(new_x, new_y)
+    # If a white knight was moved, move it back
     if knight_moved:
       white_knight_index = white_knights.index([knight_x, knight_y])
       white_knights[white_knight_index] = [x, y]
@@ -144,9 +163,12 @@ class Game:
       self.set_board(self.change_white_knight_board(knight_x, knight_y, x, y))
 
   def simulate(self, white_knights, black_knights):
+    """Simulate a game round to check if there's a winning state."""
+    # Check if all the black knights have been taken
     if all(knight[2] for knight in black_knights):
       return True
 
+    # Check if there's a white knight that can take a black knight
     moves = [(1, -2), (1, 2), (-1, -2), (-1, 2), (2, -1), (2, 1), (-2, -1), (-2, 1)]
     for white_knight in white_knights:
       if not white_knight[2]:
@@ -163,21 +185,25 @@ class Game:
     return False
 
   def check_win(self):
+    """Check if there's a winning state for the current game."""
     while True:
       white_knights = copy.deepcopy(self.white_knights)
       black_knights = copy.deepcopy(self.black_knights)
 
+      # Add a flag to check if a knight has been taken
       for white_knight in white_knights:
         white_knight.append(False)
       
       for black_knight in black_knights:
         black_knight.append(False)
 
+      # Use the simulate function to check if there's a winning state
       if self.simulate(white_knights, black_knights):
         return True
       return False
   
   def draw(self, win):
+    """Draw the game board."""
     board = self.board
     for y in range(self.rows):
       for x in range(self.cols):
@@ -207,6 +233,7 @@ class Game:
           win.blit(K_IMAGE_PATH, (x*SQUARE_SIZE, y*SQUARE_SIZE))
 
   def dfs(self, max_depth, depth, path):
+    """Depth-first search algorithm."""
     if depth >= max_depth:
       return []
     for [direction, x, y] in MOVES:
@@ -227,6 +254,7 @@ class Game:
     return []
   
   def iddfs(self):
+    """Iterative deepening depth-first search algorithm."""
     depth = 0
     result = []
     while len(result) == 0:
@@ -235,6 +263,7 @@ class Game:
     return result
 
   def bfs(self):
+    """Breadth-first search algorithm."""
     queue = deque([(copy.deepcopy(self.board), [])])
     visited = set()
     while queue:
@@ -257,9 +286,12 @@ class Game:
     return []
 
   def greedy(self):
+    """Greedy algorithm."""
     path = []
     queue = []
+    # Push the initial state to the priority queue
     heapq.heappush(queue, (0, copy.deepcopy(self.board), path))
+    # Set to keep track of visited states
     visited = set()
     while queue:
       _, board, path = heapq.heappop(queue)
@@ -289,15 +321,19 @@ class Game:
     return []
   
   def heuristic_sum_distances(self):
+    """Heuristic function for the sum of distances."""
     distances = []
     for white_knight in self.white_knights:
       distances.append(min([abs(white_knight[0] - pos[0]) + abs(white_knight[1] - pos[1]) for pos in self.get_take_positions()[self.white_knights.index(white_knight)]], default=0))
     return sum(distances)
 
   def a_star_sum_distance(self):
+    """A* algorithm with the sum of distances heuristic."""
     path = []
     queue = []
+    # Set to keep track of visited states
     visited = set()
+    # Push the initial state to the priority queue
     heapq.heappush(queue, (0, self.board, path))
     while queue:
       cost, board, path = heapq.heappop(queue)
@@ -321,15 +357,19 @@ class Game:
     return []
   
   def heuristic_max_distance(self):
+    """Heuristic function for the max distance."""
     distances = []
     for white_knight in self.white_knights:
       distances.append(min([abs(white_knight[0] - pos[0]) + abs(white_knight[1] - pos[1]) for pos in self.get_take_positions()[self.white_knights.index(white_knight)]], default=0))
     return max(distances) if distances else 0
   
   def a_star_max_distance(self):
+    """A* algorithm with the max distance heuristic."""
     path = []
     queue = []
+    # Push the initial state to the priority queue
     heapq.heappush(queue, (0, copy.deepcopy(self.board), path))
+    # Set to keep track of visited states
     visited = set()
     while queue:
       _, board, path = heapq.heappop(queue)
@@ -353,6 +393,7 @@ class Game:
     return []
   
   def heuristic_knights_not_in_position(self):
+    """Heuristic function for the number of knights not in take positions."""
     count = 0
     for white_knight in self.white_knights:
       if white_knight not in self.get_take_positions()[self.white_knights.index(white_knight)]:
@@ -360,9 +401,12 @@ class Game:
     return count
 
   def a_star_knights_not_in_position(self):
+    """A* algorithm with the number of knights not in take positions heuristic."""
     path = []
     queue = []
+    # Push the initial state to the priority queue
     heapq.heappush(queue, (0, copy.deepcopy(self.board), path))
+    # Set to keep track of visited states
     visited = set()
     while queue:
       _, board, path = heapq.heappop(queue)
@@ -386,10 +430,13 @@ class Game:
     return []
   
   def combined_heuristic(self):
+    """Combined heuristic function."""
+    # Weights for the heuristics
     weight1 = 1.0
     weight2 = 1.0
     weight3 = 1.0
 
+    # Heuristics
     heuristic1 = self.heuristic_sum_distances()
     heuristic2 = self.heuristic_max_distance()
     heuristic3 = self.heuristic_knights_not_in_position()
@@ -399,9 +446,12 @@ class Game:
     return combined_heuristic
   
   def a_star_combined_heuristic(self):
+    """A* algorithm with the combined heuristic."""
     path = []
     queue = []
+    # Push the initial state to the priority queue
     heapq.heappush(queue, (0, copy.deepcopy(self.board), path))
+    # Set to keep track of visited states
     visited = set()
     while queue:
       _, board, path = heapq.heappop(queue)
@@ -425,6 +475,7 @@ class Game:
     return []
 
   def hint(self):
+    """Get a hint for the next move."""
     current_board = copy.deepcopy(self.board)
     moves = self.a_star_sum_distance()
     self.set_board(current_board)

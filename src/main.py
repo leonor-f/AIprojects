@@ -5,6 +5,7 @@ from game import Game
 from macros import *
 
 def draw_rules_menu(win):
+  """Draws the rules menu on the screen."""
   win.fill((112, 113, 160))
   
   win.blit(RULES_PAGE_IMAGE_PATH, (0, 0))
@@ -26,6 +27,7 @@ def draw_rules_menu(win):
           return 1
 
 def draw_levels_menu(win):
+  """Draws the levels menu on the screen."""
   win.fill((112, 113, 160))
   
   win.blit(TITLE_IMAGE_PATH, (105, 100))
@@ -97,6 +99,7 @@ def draw_levels_menu(win):
           return 11
 
 def draw_start_menu(win):
+  """Draws the start menu on the screen."""
   win.fill((112, 113, 160))
   
   win.blit(TITLE_IMAGE_PATH, (105, 100))
@@ -153,6 +156,7 @@ def draw_start_menu(win):
           return 'AI', 'A_STAR_COMBINED'
 
 def draw_menu(win):
+  """Draws the main menu on the screen."""
   win.fill((112, 113, 160))
 
   win.blit(TITLE_IMAGE_PATH, (105, 100))
@@ -187,6 +191,7 @@ def draw_menu(win):
           return 4
 
 def main():
+  """Main function of the game."""
   # PYGAME INITIALIZATION
   pygame.init()
   pygame.display.set_caption("Chesskoban")
@@ -203,6 +208,7 @@ def main():
   
   menu = True
 
+  # MAIN MENU
   while menu:
     menu_option = draw_menu(win)
     if menu_option in [1, 2]:
@@ -229,6 +235,7 @@ def main():
   WON_LOST_IMAGE_PATH = ''
   won_lost = False
 
+  # GAME LOOP
   while level < 11:
     GAME.set_board(Board(level).board)
     
