@@ -293,6 +293,9 @@ def main():
               direction = 'down'
             elif event.key == pygame.K_d:
               direction = 'right'
+            elif event.key == pygame.K_h:
+              moves = GAME.hint()
+              print(moves)
             elif event.key == pygame.K_SPACE:
               run = False
               if GAME.check_win():

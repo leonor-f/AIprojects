@@ -424,3 +424,9 @@ class Game:
           heapq.heappush(queue, (len(new_path) + heuristic, copy.deepcopy(self.board), new_path))
           self.undo_move(tail)
     return []
+
+  def hint(self):
+    current_board = copy.deepcopy(self.board)
+    moves = self.greedy()
+    self.set_board(current_board)
+    return moves
