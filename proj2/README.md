@@ -17,6 +17,10 @@ pip install matplotlib
 pip install numpy
 pip install pandas
 pip install sklearn
+pip install xgboost
+pip install lightgbm
+pip install catboost
+pip install tabulate
 pip install imblearn
 pip install scipy
 pip install seaborn
