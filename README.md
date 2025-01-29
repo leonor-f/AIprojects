@@ -1,6 +1,6 @@
 ## Artificial Intelligence projects
 
-Development of two AI-driven projects for the IART Curricular Unit:
+Development of two AI-driven projects for the IA Curricular Unit:
 
 1. [**Chesskoban**](proj1): a puzzle game that merges Chess mechanics with the Sokoban format. AI is used to generate the most efficient solutions and provide hints to the player, enhancing the gameplay experience for both chess enthusiasts and beginners.
 
