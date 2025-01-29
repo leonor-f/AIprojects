@@ -6,4 +6,4 @@ Development of two AI-driven projects for the IART Curricular Unit:
 
 2. [**Spruce Tree Type Detection**](proj2): this project employs supervised learning techniques to classify spruce tree types. Algorithms such as Decision Tree, Support Vector Machine (SVM), and Nearest Neighbor are used to analyze and categorize tree types based on specific features.
 
-Grade: 18.3 / 20
+#### Grade: 18/20
