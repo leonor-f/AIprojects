@@ -2,6 +2,7 @@
 
 ## Introduction
 Chesskoban is a Puzzle game with the combination of Chess mechanics and Sokoban game for chess lovers and beginners.
+#### Grade: 19/20
 
 ## How to play
 The board is set up with only **black and white knights** on random positions. There is an additional piece called the **Player**, which is represented by a unique piece, inspired on the **King**.
